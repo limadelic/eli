@@ -1,0 +1,32 @@
+name: Badges
+
+on:
+  pull_request:
+
+permissions:
+  pull-requests: write
+
+jobs:
+  badges:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compute deployment prefix
+        id: prefix
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: ${{ github.head_ref }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: echo "prefix=$(ops/ci/site/prefix.rb)" >> "$GITHUB_OUTPUT"
+
+      - name: Add badge block to PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PREFIX: ${{ steps.prefix.outputs.prefix }}
+        run: |
+          gh pr view $PR_NUMBER --json body -q .body > /tmp/body.md
+          ruby ops/ci/badges/body.rb
+          gh pr edit $PR_NUMBER --body-file /tmp/body.md
