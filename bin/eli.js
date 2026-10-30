@@ -3,12 +3,13 @@ import fs from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
 import { lines } from "../lib/lines.js";
+import { sections } from "../lib/sections.js";
 
 const skills = join(homedir(), ".claude", "skills");
 
 const read = (path) => fs.readFileSync(join(skills, path), "utf8");
 
-const rules = [lines];
+const rules = [lines, sections];
 
 const check = (name) => {
   const text = read(`${name}/SKILL.md`);

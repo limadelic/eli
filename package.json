@@ -15,5 +15,8 @@
     "eslint": "^10.13.0",
     "jscpd": "^5.4.2",
     "prettier": "^3.9.10"
+  },
+  "dependencies": {
+    "remark": "^15.0.1"
   }
 }
