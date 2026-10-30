@@ -1,0 +1,37 @@
+name: Cukes
+
+on: workflow_call
+
+permissions:
+  contents: read
+
+jobs:
+  cukes:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true
+
+      - run: npm ci
+
+      - name: Run Cucumber tests
+        run: |
+          mkdir -p reports
+          bundle exec cucumber --format progress --format html --out reports/cucumber.html --format json --out reports/cucumber.json
+
+      - name: Upload Cucumber report artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cukes-report-${{ github.run_id }}
+          path: reports/

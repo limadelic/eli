@@ -45,3 +45,7 @@ jobs:
       - run: npm ci
 
       - run: npm test
+
+  cukes:
+    needs: [lint, test]
+    uses: ./.github/workflows/cukes.yml
