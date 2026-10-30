@@ -6,8 +6,8 @@
     "eli": "bin/eli.js"
   },
   "scripts": {
-    "lint": "prettier --check . && eslint . && jscpd --threshold 0 --min-lines 3 --min-tokens 20 --format javascript --reporters console --ignore \"**/node_modules/**\" .",
-    "test": "node --test",
+    "lint": "prettier --check . && eslint . && jscpd --threshold 0 --min-lines 3 --min-tokens 20 --format javascript --reporters console --ignore \"**/node_modules/**\" . && bundle exec rubocop",
+    "test": "bundle exec cucumber",
     "tcr": "bin/tcr"
   },
   "devDependencies": {

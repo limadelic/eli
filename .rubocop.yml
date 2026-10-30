@@ -1,0 +1,135 @@
+AllCops:
+  TargetRubyVersion: 3.0
+  NewCops: disable
+  SuggestExtensions: false
+  Exclude:
+    - "vendor/**/*"
+    - "node_modules/**/*"
+    - "deps/**/*"
+    - "_build/**/*"
+    - "tmp/**/*"
+
+# HARD CONSTRAINTS: seven-line methods, zero nesting, guard clauses
+Metrics/MethodLength:
+  Max: 7
+  CountAsOne:
+    - array
+    - hash
+    - heredoc
+    - method_call
+
+Metrics/BlockNesting:
+  Max: 1
+
+Metrics/CyclomaticComplexity:
+  Max: 2
+
+Metrics/PerceivedComplexity:
+  Max: 20
+
+Metrics/AbcSize:
+  Max: 35
+
+Metrics/ClassLength:
+  Max: 150
+
+Metrics/ModuleLength:
+  Max: 180
+
+Metrics/BlockLength:
+  Enabled: false
+
+Metrics/ParameterLists:
+  Enabled: false
+
+# Style cops: enable GuardClause only
+Style:
+  Enabled: false
+
+Style/GuardClause:
+  Enabled: true
+
+# Layout: relax noise, keep basics enabled
+Layout:
+  Enabled: true
+
+Layout/LineLength:
+  Max: 120
+
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
+Layout/MultilineOperationIndentation:
+  EnforcedStyle: indented
+
+Layout/ArgumentAlignment:
+  EnforcedStyle: with_fixed_indentation
+
+Layout/ParameterAlignment:
+  EnforcedStyle: with_fixed_indentation
+
+Layout/ArrayAlignment:
+  EnforcedStyle: with_fixed_indentation
+
+Layout/HashAlignment:
+  EnforcedHashRocketStyle: key
+  EnforcedColonStyle: key
+
+Layout/FirstArgumentIndentation:
+  EnforcedStyle: consistent
+
+Layout/FirstParameterIndentation:
+  EnforcedStyle: consistent
+
+Layout/FirstHashElementIndentation:
+  EnforcedStyle: consistent
+
+Layout/FirstArrayElementIndentation:
+  EnforcedStyle: consistent
+
+Layout/MultilineHashBraceLayout:
+  EnforcedStyle: new_line
+
+Layout/MultilineArrayBraceLayout:
+  EnforcedStyle: new_line
+
+Layout/MultilineMethodCallBraceLayout:
+  EnforcedStyle: new_line
+
+Layout/FirstHashElementLineBreak:
+  Enabled: true
+
+Layout/FirstArrayElementLineBreak:
+  Enabled: true
+
+Layout/FirstMethodArgumentLineBreak:
+  Enabled: true
+
+Naming/FileName:
+  Enabled: true
+  ExpectMatchingDefinition: true
+  CheckDefinitionPathHierarchy: true
+  CheckDefinitionPathHierarchyRoots:
+    - lib
+  Exclude:
+    - "bin/**/*"
+    - "features/step_definitions/**/*"
+    - "tmp/**/*"
+
+Naming/MethodName:
+  EnforcedStyle: snake_case
+
+Lint/SuppressedException:
+  Enabled: false
+
+Lint:
+  Enabled: true
+
+Naming/MethodParameterName:
+  Enabled: false
+
+Metrics:
+  Enabled: true
+
+Gemspec:
+  Enabled: false
