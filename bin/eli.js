@@ -13,7 +13,7 @@ const rules = [lines, sections];
 
 const check = (name) => {
   const text = read(`${name}/SKILL.md`);
-  const limits = read("elle/limits.md");
+  const limits = read("elle/rules.md");
   return rules.flatMap((rule) => rule(name, text, limits));
 };
 
