@@ -2,19 +2,18 @@
 import fs from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
+import { lines } from "../lib/lines.js";
 
 const skills = join(homedir(), ".claude", "skills");
 
 const read = (path) => fs.readFileSync(join(skills, path), "utf8");
 
-const limit = () => Number(read("elle/limits.md").match(/max (\d+) lines/)[1]);
+const rules = [lines];
 
-const count = (text) => text.split("\n").length - 1;
-
-const check = (name, max) => {
-  const lines = count(read(`${name}/SKILL.md`));
-  const over = [`${name}/SKILL.md:${lines} lines ${lines} > ${max}`];
-  return over.slice(0, Number(lines > max));
+const check = (name) => {
+  const text = read(`${name}/SKILL.md`);
+  const limits = read("elle/limits.md");
+  return rules.flatMap((rule) => rule(name, text, limits));
 };
 
 const report = (found) => {
@@ -22,4 +21,4 @@ const report = (found) => {
   process.exitCode = found.length;
 };
 
-report(check(process.argv[2], limit()));
+report(check(process.argv[2]));
