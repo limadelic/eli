@@ -16,6 +16,7 @@ const nocomments = {
 };
 
 export default [
+  { ignores: ["vendor/**"] },
   {
     files: ["**/*.js"],
     languageOptions: { ecmaVersion: "latest", sourceType: "module" },
