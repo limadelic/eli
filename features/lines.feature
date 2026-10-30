@@ -1,5 +1,11 @@
 Feature: Lines
 
+  Background:
+    * > touch elle/rules.md
+      """
+      - A file: max 2 sections, max 9 lines
+      """
+
   Scenario: a long skill fails
     * > touch long/SKILL.md
       """
