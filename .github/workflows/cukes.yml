@@ -28,7 +28,7 @@ jobs:
         id: prefix
         env:
           GH_TOKEN: ${{ github.token }}
-          BRANCH: ${{ github.ref_name }}
+          BRANCH: ${{ github.head_ref || github.ref_name }}
           GITHUB_REPOSITORY: ${{ github.repository }}
         run: echo "prefix=$(ops/ci/site/prefix.rb)" >> "$GITHUB_OUTPUT"
 
@@ -41,7 +41,7 @@ jobs:
         if: always()
         env:
           GH_TOKEN: ${{ github.token }}
-          BRANCH: ${{ github.ref_name }}
+          BRANCH: ${{ github.head_ref || github.ref_name }}
           GITHUB_REPOSITORY: ${{ github.repository }}
         run: ops/ci/badges/badges.rb
 
@@ -64,7 +64,7 @@ jobs:
         id: branch_slug
         if: always()
         run: |
-          branch="${{ github.ref_name }}"
+          branch="${{ github.head_ref || github.ref_name }}"
           slug="${branch//\//-}"
           echo "slug=$slug" >> "$GITHUB_OUTPUT"
 

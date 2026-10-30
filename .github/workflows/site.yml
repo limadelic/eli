@@ -21,7 +21,7 @@ jobs:
       - name: Sanitize branch name for artifact
         id: branch_slug
         run: |
-          branch="${{ github.ref_name }}"
+          branch="${{ github.head_ref || github.ref_name }}"
           slug="${branch//\//-}"
           echo "slug=$slug" >> "$GITHUB_OUTPUT"
 
