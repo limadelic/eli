@@ -5,6 +5,12 @@ When(/^> eli(?: (.+))?$/) do |args, *rest|
   expect_lines(rest.first, output)
 end
 
+When(/^> touch (.+)$/) do |path, body|
+  file = File.join(home, '.claude', 'skills', path)
+  FileUtils.mkdir_p(File.dirname(file))
+  File.write(file, "#{body}\n")
+end
+
 def expect_lines(table, output)
   return expect(output).to be_empty unless table
 
