@@ -14,12 +14,32 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Sanitize branch name for artifact
         id: branch_slug
         run: |
           branch="${{ github.ref_name }}"
           slug="${branch//\//-}"
           echo "slug=$slug" >> "$GITHUB_OUTPUT"
+
+      - name: Seed site from live Pages
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          base=https://limadelic.github.io/eli
+          mkdir -p site
+          for file in report.html cukes.json; do
+            curl -sfL "$base/$file" -o "site/$file" || true
+          done
+          { git branch -r | sed 's/^[[:space:]]*origin\///' | grep -v '^HEAD'; gh pr list --state open --json number --jq '.[].number'; } | sort -u | while read -r dir; do
+            mkdir -p "site/$dir"
+            for file in report.html cukes.json; do
+              curl -sfL "$base/$dir/$file" -o "site/$dir/$file" || true
+            done
+          done
 
       - name: Download cukes HTML artifact
         uses: actions/download-artifact@v4
