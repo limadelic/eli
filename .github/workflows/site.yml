@@ -1,0 +1,69 @@
+name: Site
+
+on: workflow_call
+
+permissions:
+  pages: write
+  id-token: write
+
+jobs:
+  site:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sanitize branch name for artifact
+        id: branch_slug
+        run: |
+          branch="${{ github.head_ref || github.ref_name }}"
+          slug="${branch//\//-}"
+          echo "slug=$slug" >> "$GITHUB_OUTPUT"
+
+      - name: Seed site from live Pages
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          base=https://limadelic.github.io/eli
+          mkdir -p site
+          fetch() {
+            tmp=$(mktemp)
+            code=$(curl -sSL -o "$tmp" -w '%{http_code}' "$1") || exit 1
+            case $code in
+              200) mv "$tmp" "$2" ;;
+              404) ;;
+              *) echo "HTTP $code for $1" >&2; exit 1 ;;
+            esac
+          }
+          for file in report.html cukes.json; do
+            fetch "$base/$file" "site/$file"
+          done
+          { git branch -r | sed 's/^[[:space:]]*origin\///' | grep -v '^HEAD'; gh pr list --state open --limit 1000 --json number --jq '.[].number'; } | sort -u | while read -r dir; do
+            mkdir -p "site/$dir"
+            for file in report.html cukes.json; do
+              fetch "$base/$dir/$file" "site/$dir/$file"
+            done
+          done
+
+      - name: Download cukes HTML artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: cukes-html-${{ steps.branch_slug.outputs.slug }}
+          path: site
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload to Pages
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: site
+
+      - name: Deploy to Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -15,7 +15,7 @@ if ! npm test; then
 fi
 
 if ! npm run lint; then
-  echo "TCR: credo failed, reverting."
+  echo "TCR: lint failed, reverting."
   git checkout -- .
   git clean -fd -e bin/tcr
   exit 1
