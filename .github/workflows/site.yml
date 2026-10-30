@@ -31,13 +31,22 @@ jobs:
         run: |
           base=https://limadelic.github.io/eli
           mkdir -p site
+          fetch() {
+            tmp=$(mktemp)
+            code=$(curl -sSL -o "$tmp" -w '%{http_code}' "$1") || exit 1
+            case $code in
+              200) mv "$tmp" "$2" ;;
+              404) ;;
+              *) echo "HTTP $code for $1" >&2; exit 1 ;;
+            esac
+          }
           for file in report.html cukes.json; do
-            curl -sfL "$base/$file" -o "site/$file" || true
+            fetch "$base/$file" "site/$file"
           done
-          { git branch -r | sed 's/^[[:space:]]*origin\///' | grep -v '^HEAD'; gh pr list --state open --json number --jq '.[].number'; } | sort -u | while read -r dir; do
+          { git branch -r | sed 's/^[[:space:]]*origin\///' | grep -v '^HEAD'; gh pr list --state open --limit 1000 --json number --jq '.[].number'; } | sort -u | while read -r dir; do
             mkdir -p "site/$dir"
             for file in report.html cukes.json; do
-              curl -sfL "$base/$dir/$file" -o "site/$dir/$file" || true
+              fetch "$base/$dir/$file" "site/$dir/$file"
             done
           done
 
