@@ -49,3 +49,10 @@ jobs:
   cukes:
     needs: [lint, test]
     uses: ./.github/workflows/cukes.yml
+
+  site:
+    needs: [cukes]
+    permissions:
+      pages: write
+      id-token: write
+    uses: ./.github/workflows/site.yml

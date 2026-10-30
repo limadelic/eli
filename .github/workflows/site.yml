@@ -1,0 +1,40 @@
+name: Site
+
+on: workflow_call
+
+permissions:
+  pages: write
+  id-token: write
+
+jobs:
+  site:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Sanitize branch name for artifact
+        id: branch_slug
+        run: |
+          branch="${{ github.ref_name }}"
+          slug="${branch//\//-}"
+          echo "slug=$slug" >> "$GITHUB_OUTPUT"
+
+      - name: Download cukes HTML artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: cukes-html-${{ steps.branch_slug.outputs.slug }}
+          path: site
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload to Pages
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: site
+
+      - name: Deploy to Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
