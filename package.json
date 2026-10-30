@@ -6,7 +6,7 @@
     "eli": "bin/eli.js"
   },
   "scripts": {
-    "lint": "prettier --check . && eslint . && jscpd --threshold 0 --min-lines 3 --min-tokens 20 --format javascript --reporters console --ignore \"**/node_modules/**\" --ignore \"**/vendor/**\" --ignore \"**/reports/**\" . && bundle exec rubocop",
+    "lint": "prettier --check . && eslint . && jscpd --threshold 0 --min-lines 3 --min-tokens 20 --format javascript --reporters console --ignore \"**/node_modules/**\" --ignore \"**/vendor/**\" --ignore \"**/reports/**\" --ignore \"**/site/**\" .&& bundle exec rubocop",
     "test": "bundle exec cucumber",
     "tcr": "bin/tcr"
   },

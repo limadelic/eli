@@ -24,10 +24,34 @@ jobs:
 
       - run: npm ci
 
+      - name: Compute deployment prefix
+        id: prefix
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: ${{ github.ref_name }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: echo "prefix=$(ops/ci/site/prefix.rb)" >> "$GITHUB_OUTPUT"
+
       - name: Run Cucumber tests
         run: |
           mkdir -p reports
           bundle exec cucumber --format progress --format html --out reports/cucumber.html --format json --out reports/cucumber.json
+
+      - name: Generate cukes badge
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: ${{ github.ref_name }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: ops/ci/badges/badges.rb
+
+      - name: Copy cucumber report to site
+        if: always()
+        env:
+          PREFIX: ${{ steps.prefix.outputs.prefix }}
+        run: |
+          mkdir -p "site/$PREFIX"
+          cp reports/cucumber.html "site/${PREFIX}report.html"
 
       - name: Upload Cucumber report artifact
         uses: actions/upload-artifact@v4
@@ -35,3 +59,17 @@ jobs:
         with:
           name: cukes-report-${{ github.run_id }}
           path: reports/
+
+      - name: Sanitize branch name for artifact
+        id: branch_slug
+        run: |
+          branch="${{ github.ref_name }}"
+          slug="${branch//\//-}"
+          echo "slug=$slug" >> "$GITHUB_OUTPUT"
+
+      - name: Upload cukes HTML artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cukes-html-${{ steps.branch_slug.outputs.slug }}
+          path: site/
