@@ -9,6 +9,6 @@ module Home
   end
 
   def home
-    File.expand_path('../home', __dir__)
+    @home
   end
 end
