@@ -21,3 +21,23 @@ Feature: skill
       * the exit code is 1
       * the output is exactly
         | wide/SKILL.md:6 skill.width 11 > 10 |
+
+    Scenario: warn reports and exits 0
+      * > touch .eli.yml
+        """
+        skill:
+          width: [warn, 10]
+        """
+      * > touch wide/SKILL.md
+        """
+        # Wide
+
+        Short.
+        Ok.
+        Fine.
+        abcdefghijk
+        """
+      * > run wide
+      * the exit code is 0
+      * the output is exactly
+        | wide/SKILL.md:6 skill.width 11 > 10 |
