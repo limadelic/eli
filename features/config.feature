@@ -41,54 +41,44 @@ Feature: Config
     * > eli short
       | .eli.yml unknown rule max-foo |
 
-  Scenario: a project .eli.yml beats the home one
+  Scenario: the nearest config wins per prop
     * > touch .eli.yml
       """
       skill:
         lines: 2
+        sections: 1
+        width: 10
       """
     * > touch proj/.eli.yml
       """
       skill:
-        lines: 3
-      """
-    * > touch long/SKILL.md
-      """
-      # Long
-
-      Ok.
-      Ok.
-      """
-    * > cd proj
-    * > eli long
-      | long/SKILL.md:4 skill.lines 4 > 3 |
-
-  Scenario: the --config flag beats project and home configs
-    * > touch .eli.yml
-      """
-      skill:
-        lines: 2
-      """
-    * > touch proj/.eli.yml
-      """
-      skill:
-        lines: 2
+        sections: 2
+        width: 20
       """
     * > touch flag.yml
       """
       skill:
-        lines: 3
+        width: 30
       """
-    * > touch long/SKILL.md
+    * > touch mix/SKILL.md
       """
-      # Long
+      # Mix
 
-      Ok.
-      Ok.
+      Lorem ipsum dolor sit amet, consectetur adipiscing.
+
+      ## a
+
+      ## b
+
+      ## c
       """
     * > cd proj
-    * > eli --config ../flag.yml long
-      | long/SKILL.md:4 skill.lines 4 > 3 |
+    * > run --config ../flag.yml mix
+    * the output is exactly
+      | mix/SKILL.md:9 skill.lines 9 > 2 |
+      | mix/SKILL.md:9 skill.sections 3 > 2 |
+      | mix/SKILL.md:3 skill.width 51 > 30 |
+    * the exit code is 1
 
   Scenario: off reports nothing
     * > touch .eli.yml
