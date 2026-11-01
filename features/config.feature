@@ -63,7 +63,7 @@ Feature: Config
       skill:
         width: 30
       """
-    * > touch mix/SKILL.md
+    * > touch proj/mix/SKILL.md
       """
       # Mix
 
