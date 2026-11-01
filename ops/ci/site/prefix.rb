@@ -17,6 +17,9 @@ module Prefix
   end
 
   def self.prune(env)
+    branch = env.fetch('DELETED_BRANCH', '')
+    return ["#{slug(branch)}/"] unless branch.empty?
+
     ["#{env.fetch('PR_NUMBER')}/"]
   end
 
