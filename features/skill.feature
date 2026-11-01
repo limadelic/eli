@@ -61,3 +61,21 @@ Feature: skill
       * > run wide
       * the exit code is 0
       * the output is empty
+
+    Scenario: a long line in a code fence passes
+      * > touch wide/SKILL.md
+        """
+        # Wide
+
+        Short.
+
+        ```
+        abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghi
+        ```
+
+        abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabc
+        """
+      * > run wide
+      * the exit code is 1
+      * the output is exactly
+        | wide/SKILL.md:9 skill.width 81 > 80 |
