@@ -27,6 +27,10 @@ section:
   steps: 7
 step:
   lines: 2
+code:
+  width: 120
+link:
+  width: 200
 ```
 
 | Selector  | Prop       | Counts                                             | Default     |
@@ -40,7 +44,7 @@ step:
 | `code`    | `width`    | characters in fenced code lines                    | off         |
 | `link`    | `width`    | characters in a URL                                | off         |
 
-`agent` takes the same props as `skill`. `code` and `link` default to `off`, which skips fenced code and does not count URLs. Setting `code.width` or `link.width` today is an unknown rule, exit 2.
+`agent` takes the same props as `skill`. `code` and `link` default to `off`, which skips fenced code and does not count URLs.
 
 Values:
 

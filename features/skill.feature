@@ -2,7 +2,12 @@ Feature: skill
 
   Rule: width
 
-    Scenario: over-width prose fails, code and links pass
+    Scenario: over-width prose and code fail, links pass
+      * > touch .eli.yml
+        """
+        code:
+          width: 80
+        """
       * > touch wide/SKILL.md
         """
         # Wide
@@ -28,6 +33,7 @@ Feature: skill
       * > run wide
       * the exit code is 1
       * the output is exactly
+        | wide/SKILL.md:8 code.width 87 > 80 |
         | wide/SKILL.md:13 skill.width 102 > 80 |
         | wide/SKILL.md:15 skill.width 81 > 80 |
         | wide/SKILL.md:19 skill.width 81 > 80 |
