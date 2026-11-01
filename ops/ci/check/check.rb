@@ -3,12 +3,14 @@
 require 'json'
 require 'net/http'
 require 'uri'
+require_relative '../site/prefix'
 
 module Check
   BASE = 'https://limadelic.github.io/eli'
   REPO = 'limadelic/eli'
   TRIES = Integer(ENV.fetch('TRIES', 10))
   GAP = Float(ENV.fetch('GAP', 15))
+  ENV['GITHUB_REPOSITORY'] ||= REPO
 
   def self.run
     bad = failures
@@ -21,48 +23,49 @@ module Check
   end
 
   def self.failures
-    unsettled.map(&:first)
+    sources = camo_sources
+    statics(sources) + unsettled(sources)
+  rescue JSON::ParserError
+    ['gh pr list failed']
   end
 
-  def self.unsettled
-    checks.reject { |_url, check| settle(check) }
+  def self.statics(sources)
+    sources.to_h.select { |_label, srcs| srcs.empty? }.keys
+  end
+
+  def self.unsettled(sources)
+    checks(sources).to_h.reject { |_url, check| settle(check) }.keys
   end
 
   def self.settle(check)
-    TRIES.times.any? { attempt(check) }
+    check.call || retry_later(check)
   end
 
-  def self.attempt(check)
-    check.call || pause
+  def self.retry_later(check)
+    (TRIES - 1).times.any? do
+      sleep GAP
+      check.call
+    end
   end
 
-  def self.pause
-    sleep GAP
-    false
-  end
-
-  def self.checks
-    dirs.flat_map { |dir| page_checks(dir) } + pr_checks + readme_checks
+  def self.checks(sources)
+    dirs.flat_map { |dir| page_checks(dir) } + camo_checks(sources)
   end
 
   def self.dirs
     prs = open_prs
-    ['', *prs.values.map { |number| "#{number}/" }, *current(prs)].uniq
+    ['', *prs.values.map { |number| "#{number}/" }, *current].uniq
   end
 
-  def self.current(prs)
+  def self.current
     branch = ref
-    return [] if [nil, 'main'].include?(branch)
+    return [] if branch.nil?
 
-    [prefix(branch, prs)]
-  end
-
-  def self.prefix(branch, prs)
-    "#{prs.fetch(branch, branch)}/"
+    [Prefix.compute(branch)]
   end
 
   def self.open_prs
-    listing = `gh pr list -R #{REPO} --state open --json number,headRefName`
+    listing = `gh pr list -R #{REPO} --state open --limit 1000 --json number,headRefName`
     JSON.parse(listing).to_h { |pr| [pr['headRefName'], pr['number']] }
   end
 
@@ -71,8 +74,8 @@ module Check
     report = "#{BASE}/#{dir}report.html"
     shield = badge(cukes)
     [
-      [cukes, -> { get(cukes).code == '200' }],
-      [report, -> { get(report).code == '200' }],
+      [cukes, -> { status_ok?(get(cukes)) }],
+      [report, -> { status_ok?(get(report)) }],
       [shield, -> { badge_ok?(shield) }]
     ]
   end
@@ -83,23 +86,24 @@ module Check
 
   def self.badge_ok?(url)
     res = get(url)
-    res.code == '200' && svg?(res.body)
+    status_ok?(res) && svg?(res.body)
   end
 
   def self.svg?(text)
     text.include?('cukes') && text.match?(%r{\d+/\d+})
   end
 
-  def self.pr_checks
-    open_prs.values.flat_map { |number| body_checks(number) }
+  def self.camo_sources
+    pr_sources = open_prs.values.map { |number| ["PR #{number} body has camo image", camo_srcs(number)] }
+    pr_sources + [['README has camo image', readme_srcs]]
   end
 
-  def self.body_checks(number)
-    camo_checks("PR #{number} body has camo image", camo_srcs(number))
+  def self.camo_checks(sources)
+    camo_urls(sources).map { |src| [src, -> { camo_ok?(src) }] }
   end
 
-  def self.camo_checks(label, srcs)
-    [[label, -> { srcs.any? }]] + srcs.map { |src| [src, -> { camo_ok?(src) }] }
+  def self.camo_urls(sources)
+    sources.flat_map { |_label, srcs| srcs }
   end
 
   def self.camo_srcs(number)
@@ -109,10 +113,6 @@ module Check
 
   def self.scan(html)
     html.scan(%r{src="(https://camo\.githubusercontent\.com/[^"]+)"}).flatten
-  end
-
-  def self.readme_checks
-    camo_checks('README has camo image', readme_srcs)
   end
 
   def self.readme_srcs
@@ -126,11 +126,17 @@ module Check
 
   def self.camo_ok?(url)
     res = get(url)
-    res.code == '200' && res['content-type'].to_s.start_with?('image/svg+xml')
+    status_ok?(res) && res['content-type'].to_s.start_with?('image/svg+xml')
+  end
+
+  def self.status_ok?(res)
+    res&.code == '200'
   end
 
   def self.get(url)
     Net::HTTP.get_response(URI(url))
+  rescue StandardError
+    nil
   end
 end
 
