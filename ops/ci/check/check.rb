@@ -12,6 +12,8 @@ module Check
   GAP = Float(ENV.fetch('GAP', 15))
   ENV['GITHUB_REPOSITORY'] ||= REPO
 
+  class CallFailed < StandardError; end
+
   def self.run
     bad = failures
     bad.each { |url| puts url }
@@ -25,21 +27,28 @@ module Check
   def self.failures
     sources = camo_sources
     statics(sources) + unsettled(sources) + stale_messages
-  rescue JSON::ParserError, KeyError
+  rescue JSON::ParserError, KeyError, CallFailed
     ['gh call failed']
   end
 
   def self.stale_messages
-    stale_dirs.map { |dir| "stale gh-pages dir: #{dir}/" }
+    stale_dirs.map { |dir| "stale badges dir: #{dir}/" }
   end
 
   def self.stale_dirs
-    numbers = open_numbers
-    stored_dirs.reject { |dir| numbers.include?(dir) }
+    live = open_numbers + live_branches
+    stored_dirs.reject { |dir| live.include?(dir) }
   end
 
   def self.open_numbers
     open_prs.values.map(&:to_s)
+  end
+
+  def self.live_branches
+    names = `gh api repos/#{REPO}/branches --paginate --jq '.[].name'`
+    raise CallFailed unless $?.success?
+
+    names.split("\n")
   end
 
   def self.stored_dirs
@@ -51,7 +60,7 @@ module Check
   end
 
   def self.tree_entries
-    JSON.parse(`gh api "repos/#{REPO}/git/trees/gh-pages"`).fetch('tree')
+    JSON.parse(`gh api "repos/#{REPO}/git/trees/badges"`).fetch('tree')
   end
 
   def self.statics(sources)
