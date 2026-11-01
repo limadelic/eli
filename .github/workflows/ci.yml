@@ -63,7 +63,7 @@ jobs:
       pages: write
       id-token: write
       pull-requests: write
-    uses: limadelic/badge/.github/workflows/badge.yml@v1
+    uses: limadelic/badge/.github/workflows/badge.yml@v1.1
     with:
       labels: cukes=report.html
     secrets: inherit
