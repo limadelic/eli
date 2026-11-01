@@ -47,19 +47,18 @@ module Check
 
   def self.dirs
     prs = open_prs
-    branches.map { |branch| prefix(branch, prs) }.unshift('')
+    ['', *prs.values.map { |number| "#{number}/" }, *current(prs)].uniq
+  end
+
+  def self.current(prs)
+    branch = ref
+    return [] if [nil, 'main'].include?(branch)
+
+    [prefix(branch, prs)]
   end
 
   def self.prefix(branch, prs)
     "#{prs.fetch(branch, branch)}/"
-  end
-
-  def self.branches
-    names.reject { |name| name == 'main' }
-  end
-
-  def self.names
-    `git ls-remote --heads origin`.split("\n").map { |line| line.split('refs/heads/').last }
   end
 
   def self.open_prs
