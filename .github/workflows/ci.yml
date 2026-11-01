@@ -55,7 +55,7 @@ jobs:
 
   site:
     needs: [cukes]
-    if: ${{ !cancelled() }}
+    if: ${{ !cancelled() && needs.cukes.result != 'skipped' }}
     concurrency:
       group: pages
       cancel-in-progress: false
@@ -67,7 +67,7 @@ jobs:
 
   badge:
     needs: [site]
-    if: ${{ !cancelled() }}
+    if: ${{ !cancelled() && needs.site.result != 'skipped' }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
