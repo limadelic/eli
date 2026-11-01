@@ -25,6 +25,7 @@ const fire =
 const lint = (values) => (file) =>
   configure(values, kind(file))
     .flatMap(fire(fs.readFileSync(file, "utf8"), values))
+    .filter((hit) => hit.severity !== "off")
     .map((hit) => ({ ...hit, path: relative(cwd, file) }));
 
 const found = bad.length ? [] : targets(names).flatMap(lint(shaped(settings)));

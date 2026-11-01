@@ -29,12 +29,15 @@ Feature: section
         | wide/SKILL.md:4 skill.width 65 > 60 |
         | wide/SKILL.md:9 warn section.width 71 > 70 |
 
-    Scenario: nested beats section
+    Scenario: nested beats section, off skips only its own lines
       * > touch .eli.yml
         """
         skill:
+          width: off
           section:
             width: 100
+        code:
+          width: 80
         section:
           width: 70
         """
@@ -48,11 +51,16 @@ Feature: section
 
         abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghij
         abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghija
+
+        ```
+        abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghija
+        ```
         """
       * > run wide
       * the exit code is 1
       * the output is exactly
         | wide/SKILL.md:8 skill.section.width 101 > 100 |
+        | wide/SKILL.md:11 code.width 81 > 80 |
 
     Scenario: severity per element
       * > touch .eli.yml
