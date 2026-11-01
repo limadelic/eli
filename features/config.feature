@@ -39,3 +39,29 @@ Feature: Config
       """
     * > eli short
       | .eli.yml unknown rule max-foo |
+
+  Scenario: a project .eli.yml beats the home one
+    * > touch .eli.yml
+      """
+      max-lines: [error, {max: 2}]
+      """
+    * > touch proj/.eli.yml
+      """
+      max-lines: [error, {max: 9}]
+      """
+    * > touch long/SKILL.md
+      """
+      # Long
+
+      - one
+      - two
+      - three
+      - four
+      - five
+      - six
+      - seven
+      - eight
+      """
+    * > cd proj
+    * > eli long
+      | long/SKILL.md:10 lines 10 > 9 max-lines |

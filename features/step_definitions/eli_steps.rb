@@ -11,6 +11,10 @@ When(/^> touch (.+)$/) do |path, body|
   File.write(file, "#{body}\n")
 end
 
+When(/^> cd (.+)$/) do |path|
+  @cwd = File.join(home, '.claude', 'skills', path)
+end
+
 def expect_lines(table, output)
   return expect(output).to be_empty unless table
 
