@@ -9,7 +9,7 @@ Feature: skill
 
         Short.
         Ok.
-        abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefgh🎸🎸🎸🎸🎸🎸🎸🎸🎸🎸
+        abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqr🎸🎸🎸🎸🎸🎸🎸🎸🎸🎸
 
         ```
         abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghi
