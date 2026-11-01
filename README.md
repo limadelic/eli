@@ -33,16 +33,16 @@ link:
   width: 200
 ```
 
-| Selector  | Prop       | Counts                                                               | Default              |
-| --------- | ---------- | -------------------------------------------------------------------- | -------------------- |
-| `skill`   | `lines`    | lines in the file                                                    | 250                  |
-| `skill`   | `sections` | `##` sections                                                        | 7                    |
-| `skill`   | `width`    | characters per prose line before the first section                   | 80                   |
-| `section` | `width`    | characters per prose line inside a section                           | skill or agent width |
-| `section` | `steps`    | top-level list items in a section; pre-`##` text is one section      | 7                    |
-| `step`    | `lines`    | lines in one step (a list item), without nested lists or blank lines | 2                    |
-| `code`    | `width`    | characters in fenced code lines                                      | off                  |
-| `link`    | `width`    | characters in a URL, not the link label                              | off                  |
+| Selector  | Prop       | Counts                                                                         | Default              |
+| --------- | ---------- | ------------------------------------------------------------------------------ | -------------------- |
+| `skill`   | `lines`    | lines in the file                                                              | 250                  |
+| `skill`   | `sections` | `##` sections                                                                  | 7                    |
+| `skill`   | `width`    | characters per prose line before the first section                             | 80                   |
+| `section` | `width`    | characters per prose line inside a section                                     | skill or agent width |
+| `section` | `steps`    | top-level list items in a section; pre-`##` text is one section                | 7                    |
+| `step`    | `lines`    | lines in one step (a top-level list item), without nested lists or blank lines | 2                    |
+| `code`    | `width`    | characters in fenced code lines                                                | off                  |
+| `link`    | `width`    | characters in a URL, not the link label                                        | off                  |
 
 `agent` takes the same props as `skill`. `skill` props do not apply to agents.
 
