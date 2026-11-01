@@ -114,6 +114,7 @@ Naming/FileName:
   Exclude:
     - "bin/**/*"
     - "features/step_definitions/**/*"
+    - "spec/**/*"
     - "tmp/**/*"
 
 Naming/MethodName:

@@ -4,7 +4,7 @@ on:
   push:
     branches-ignore: [badges]
   pull_request:
-    types: [opened, reopened]
+    types: [opened, reopened, closed]
   workflow_dispatch:
 
 permissions:
@@ -12,6 +12,7 @@ permissions:
 
 jobs:
   lint:
+    if: ${{ github.event.action != 'closed' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -31,6 +32,7 @@ jobs:
       - run: npm run lint
 
   test:
+    if: ${{ github.event.action != 'closed' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -66,6 +68,7 @@ jobs:
     uses: ./.github/workflows/site.yml
 
   body:
+    if: ${{ github.event.action != 'closed' }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -108,3 +111,62 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
+
+  prune:
+    if: ${{ github.event.action == 'closed' && github.event.pull_request.head.repo.full_name == github.repository }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: List prefix to drop
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: ruby ops/ci/site/prefix.rb prune > "$RUNNER_TEMP/prefixes"
+
+      - uses: actions/checkout@v4
+        with:
+          ref: badges
+          path: site
+
+      - name: Remove prefix
+        working-directory: site
+        run: |
+          while IFS= read -r prefix; do
+            git rm -r -q --ignore-unmatch -- "${prefix%/}"
+          done < "$RUNNER_TEMP/prefixes"
+
+      - name: Commit and push pruned badges
+        working-directory: site
+        env:
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if ! git diff --cached --quiet; then
+            git commit -qm "Prune badges from run $RUN_ID"
+            git push -q origin HEAD:badges
+          fi
+
+      - name: Stage Pages files
+        run: rsync -a --exclude .git site/ _site/
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+      - id: deployment
+        uses: actions/deploy-pages@v4

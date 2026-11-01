@@ -6,10 +6,18 @@ require 'uri'
 
 module Prefix
   def self.run
+    ARGV.first == 'prune' ? puts(prune(ENV)) : run_compute
+  end
+
+  def self.run_compute
     branch = ENV['BRANCH']
     return if branch.nil?
 
     puts compute(branch)
+  end
+
+  def self.prune(env)
+    ["#{env.fetch('PR_NUMBER')}/"]
   end
 
   def self.compute(branch)
