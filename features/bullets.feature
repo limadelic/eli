@@ -33,3 +33,20 @@ Feature: Bullets
       """
     * > eli long
       | long/SKILL.md:7 bullets 3 > 2 max-bullets |
+
+  Scenario: bullets count per section
+    * > touch sections/SKILL.md
+      """
+      # Sections
+
+      ## a
+
+      - one
+      - two
+
+      ## b
+
+      - three
+      - four
+      """
+    * > eli sections
