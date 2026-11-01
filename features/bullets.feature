@@ -8,7 +8,7 @@ Feature: Bullets
         - max: 2
       """
 
-  Scenario: a short section passes
+  Scenario: a short skill passes
     * > touch short/SKILL.md
       """
       # Short
@@ -19,3 +19,17 @@ Feature: Bullets
       - two
       """
     * > eli short
+
+  Scenario: a long skill fails
+    * > touch long/SKILL.md
+      """
+      # Long
+
+      ## a
+
+      - one
+      - two
+      - three
+      """
+    * > eli long
+      | long/SKILL.md:7 bullets 3 > 2 max-bullets |
