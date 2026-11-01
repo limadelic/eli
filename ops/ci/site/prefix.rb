@@ -28,7 +28,11 @@ module Prefix
   end
 
   def self.branch_pr(branch)
-    fetch_pr(branch) || branch
+    fetch_pr(branch) || slug(branch)
+  end
+
+  def self.slug(branch)
+    branch.tr('/', '-')
   end
 
   def self.main_or_test?(branch)

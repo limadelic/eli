@@ -107,3 +107,4 @@ jobs:
       - run: ruby ops/ci/check/check.rb
         env:
           GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}

@@ -36,8 +36,12 @@ module Check
   end
 
   def self.stale_dirs
-    live = open_numbers + live_branches
+    live = open_numbers + live_dirs
     stored_dirs.reject { |dir| live.include?(dir) }
+  end
+
+  def self.live_dirs
+    live_branches.map { |name| Prefix.slug(name) }
   end
 
   def self.open_numbers
