@@ -14,3 +14,13 @@ Feature: Len
       abcdefghijklmnopqrst
       """
     * > eli short
+
+  Scenario: a long skill fails
+    * > touch long/SKILL.md
+      """
+      # Long
+
+      abcdefghijklmnopqrstu
+      """
+    * > eli long
+      | long/SKILL.md:3 len 21 > 20 max-len |
