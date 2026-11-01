@@ -22,7 +22,7 @@ Feature: skill
         abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghi
         ```
 
-        See [the long docs](https://example.com/abc).
+        See [the long migration guide for every release and every step](https://example.com/abc).
 
         Read the full migration guide before you touch any file in the repo, it lists every step you need, see https://example.com/abc
 
