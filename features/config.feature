@@ -42,6 +42,9 @@ Feature: Config
       | .eli.yml unknown rule max-foo |
 
   Scenario: the nearest config wins per prop
+    * > touch ../.eli.yml
+      """
+      """
     * > touch .eli.yml
       """
       skill:
