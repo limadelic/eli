@@ -47,6 +47,8 @@ Feature: section
 
         Short.
 
+        abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghij
+
         ## Part
 
         abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghij
@@ -59,8 +61,8 @@ Feature: section
       * > run wide
       * the exit code is 1
       * the output is exactly
-        | wide/SKILL.md:8 skill.section.width 101 > 100 |
-        | wide/SKILL.md:11 code.width 81 > 80 |
+        | wide/SKILL.md:10 skill.section.width 101 > 100 |
+        | wide/SKILL.md:13 code.width 81 > 80 |
 
     Scenario: severity per element
       * > touch .eli.yml
