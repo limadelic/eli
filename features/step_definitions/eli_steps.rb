@@ -19,12 +19,8 @@ When(/^> run (.+)$/) do |args|
   @output = run(args)
 end
 
-Then(/^the output is empty$/) do
-  expect(@output).to be_empty
-end
-
 Then(/^the output is exactly$/) do |table|
-  expect(@output.split("\n")).to eq(table.raw.flatten)
+  expect(@output.lines(chomp: true)).to eq(table.raw.flatten)
 end
 
 Then(/^the exit code is (\d+)$/) do |code|

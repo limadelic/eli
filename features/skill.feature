@@ -14,9 +14,10 @@ Feature: skill
 
         ab🎸🎸🎸🎸🎸🎸🎸🎸
         Short.
+        Ok.
         abcdefghijk
         """
       * > run wide
       * the exit code is 1
       * the output is exactly
-        | wide/SKILL.md:5 skill.width 11 > 10 |
+        | wide/SKILL.md:6 skill.width 11 > 10 |
