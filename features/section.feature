@@ -2,11 +2,37 @@ Feature: section
 
   Rule: width
 
-    Scenario: section width beats the skill and the nested one beats both
+    Scenario: section width beats the skill width
       * > touch .eli.yml
         """
         skill:
           width: 60
+        section:
+          width: [warn, 70]
+        """
+      * > touch wide/SKILL.md
+        """
+        # Wide
+
+        abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghij
+        abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcde
+
+        ## Part
+
+        abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghij
+        abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghija
+        Short.
+        """
+      * > run wide
+      * the exit code is 1
+      * the output is exactly
+        | wide/SKILL.md:4 skill.width 65 > 60 |
+        | wide/SKILL.md:9 warn section.width 71 > 70 |
+
+    Scenario: nested beats section
+      * > touch .eli.yml
+        """
+        skill:
           section:
             width: 100
         section:
@@ -16,28 +42,23 @@ Feature: section
         """
         # Wide
 
-        abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcde
+        Short.
 
         ## Part
 
-        abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghij
-
+        abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghij
         abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghija
-
-        Short.
-        Ok.
         """
       * > run wide
       * the exit code is 1
       * the output is exactly
-        | wide/SKILL.md:3 skill.width 65 > 60 |
-        | wide/SKILL.md:9 skill.section.width 101 > 100 |
+        | wide/SKILL.md:8 skill.section.width 101 > 100 |
 
     Scenario: severity per element
       * > touch .eli.yml
         """
         skill:
-          width: [warn, 80]
+          width: [warn, 60]
         section:
           width: off
         """
@@ -45,7 +66,7 @@ Feature: section
         """
         # Wide
 
-        abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcde
+        abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcde
 
         ## Part
 
@@ -54,4 +75,4 @@ Feature: section
       * > run wide
       * the exit code is 0
       * the output is exactly
-        | wide/SKILL.md:3 warn skill.width 85 > 80 |
+        | wide/SKILL.md:3 warn skill.width 65 > 60 |
