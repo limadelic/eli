@@ -33,16 +33,16 @@ link:
   width: 200
 ```
 
-| Selector  | Prop       | Counts                                                 | Default     |
-| --------- | ---------- | ------------------------------------------------------ | ----------- |
-| `skill`   | `lines`    | lines in the file                                      | 250         |
-| `skill`   | `sections` | `##` sections                                          | 7           |
-| `skill`   | `width`    | characters per prose line before the first section     | 80          |
-| `section` | `width`    | characters per prose line inside a section             | skill width |
-| `section` | `steps`    | top-level bullets in a section                         | 7           |
-| `step`    | `lines`    | lines in one step, without nested lists or blank lines | 2           |
-| `code`    | `width`    | characters in fenced code lines                        | off         |
-| `link`    | `width`    | characters in a URL, not the link label                | off         |
+| Selector  | Prop       | Counts                                                               | Default              |
+| --------- | ---------- | -------------------------------------------------------------------- | -------------------- |
+| `skill`   | `lines`    | lines in the file                                                    | 250                  |
+| `skill`   | `sections` | `##` sections                                                        | 7                    |
+| `skill`   | `width`    | characters per prose line before the first section                   | 80                   |
+| `section` | `width`    | characters per prose line inside a section                           | skill or agent width |
+| `section` | `steps`    | top-level list items in a section; pre-`##` text is one section      | 7                    |
+| `step`    | `lines`    | lines in one step (a list item), without nested lists or blank lines | 2                    |
+| `code`    | `width`    | characters in fenced code lines                                      | off                  |
+| `link`    | `width`    | characters in a URL, not the link label                              | off                  |
 
 `agent` takes the same props as `skill`. `skill` props do not apply to agents.
 
@@ -61,6 +61,7 @@ Lookup:
 
 - A child's own value beats an inherited one. `off` is a value like any other. So `skill: {width: off}` with `code: {width: 80}` still checks code lines at 80.
 - A section line's width is the first one set of `skill.section.width`, `section.width`, `skill.width`, then the default (80).
+- For agents, `agent` replaces `skill` in those keys: `agent.section.width`, `section.width`, `agent.width`, then 80.
 - Per prop, the first source that sets it wins: `--config <file>`, then each `.eli.yml` from the current dir up to the root, nearest first, then `~/.claude/skills/.eli.yml`, then the defaults.
 
 Output is `<path>:<line> <id> <actual> > <max>`. A warning has `warn ` before the id:
@@ -73,4 +74,4 @@ Exit codes:
 
 - `0`: no errors, warnings only or clean
 - `1`: at least one error
-- `2`: bad config, an unknown rule or an invalid value. With an invalid value, eli checks no files.
+- `2`: an unknown rule or an invalid value. With an invalid value, eli checks no files.
