@@ -22,7 +22,11 @@ module Prefix
     branch = env.fetch('DELETED_BRANCH', '')
     return [] if protected?(branch)
 
-    ["#{prune_name(branch, env)}/"]
+    stored(prune_name(branch, env))
+  end
+
+  def self.stored(name)
+    File.directory?(name) ? ["#{name}/"] : []
   end
 
   def self.prune_name(branch, env)
