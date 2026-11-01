@@ -33,3 +33,16 @@ Feature: Bullet lines
       """
     * > eli long
       | long/SKILL.md:5 lines 3 > 2 max-bullet-lines |
+
+  Scenario: nested bullets do not count
+    * > touch nested/SKILL.md
+      """
+      # Nested
+
+      ## a
+
+      - one
+        - two
+        - three
+      """
+    * > eli nested
