@@ -129,3 +129,47 @@ Feature: skill
       * the exit code is 1
       * the output is exactly
         | long/SKILL.md:6 skill.lines 6 > 5 |
+
+  Rule: sections
+
+    Scenario: a skill over its sections fails
+      * > touch .eli.yml
+        """
+        skill:
+          sections: 2
+        """
+      * > touch wide/SKILL.md
+        """
+        # Wide
+
+        ## a
+        Ok.
+
+        ## b
+        Ok.
+
+        ## c
+        Ok.
+        """
+      * > run wide
+      * the exit code is 1
+      * the output is exactly
+        | wide/SKILL.md:9 skill.sections 3 > 2 |
+
+    Scenario: a narrow skill passes
+      * > touch .eli.yml
+        """
+        skill:
+          sections: 2
+        """
+      * > touch narrow/SKILL.md
+        """
+        # Narrow
+
+        ## a
+
+        ### b
+
+        ## c
+        """
+      * > eli narrow
