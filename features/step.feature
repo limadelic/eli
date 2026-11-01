@@ -23,8 +23,14 @@ Feature: step
         - one
           - two
           - three
+
+        - one
+
+          two
+          three
         """
       * > run steps
       * the exit code is 1
       * the output is exactly
         | steps/SKILL.md:8 step.lines 3 > 2 |
+        | steps/SKILL.md:16 step.lines 3 > 2 |
