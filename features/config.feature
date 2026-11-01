@@ -102,3 +102,30 @@ Feature: Config
     * > run wide
     * the exit code is 0
     * the output is empty
+
+  Rule: invalid value
+
+    Scenario: bad values are reported and exit 2
+      * > touch .eli.yml
+        """
+        section:
+          width: of
+        step:
+          lines:
+        skill:
+          lines: true
+          sections: [loud, 3]
+        agent:
+        """
+      * > touch short/SKILL.md
+        """
+        # Short
+        """
+      * > run short
+      * the output is exactly
+        | .eli.yml section.width: invalid value of |
+        | .eli.yml step.lines: invalid value null |
+        | .eli.yml skill.lines: invalid value true |
+        | .eli.yml skill.sections: invalid value loud,3 |
+        | .eli.yml agent: invalid value null |
+      * the exit code is 2
