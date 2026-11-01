@@ -41,3 +41,23 @@ Feature: skill
       * the exit code is 0
       * the output is exactly
         | wide/SKILL.md:6 skill.width 11 > 10 |
+
+    Scenario: off reports nothing
+      * > touch .eli.yml
+        """
+        skill:
+          width: off
+        """
+      * > touch wide/SKILL.md
+        """
+        # Wide
+
+        Short.
+        Ok.
+        Fine.
+        Done.
+        abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz
+        """
+      * > run wide
+      * the exit code is 0
+      * the output is empty

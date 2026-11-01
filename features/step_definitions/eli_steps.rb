@@ -23,6 +23,10 @@ Then(/^the output is exactly$/) do |table|
   expect(@output.lines(chomp: true)).to eq(table.raw.flatten)
 end
 
+Then(/^the output is empty$/) do
+  expect(@output).to be_empty
+end
+
 Then(/^the exit code is (\d+)$/) do |code|
   expect(@status.exitstatus).to eq(code.to_i)
 end
