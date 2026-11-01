@@ -3,6 +3,7 @@ name: Site
 on: workflow_call
 
 permissions:
+  contents: write
   pages: write
   id-token: write
 
@@ -16,7 +17,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          ref: gh-pages
+          path: site
 
       - name: Sanitize branch name for artifact
         id: branch_slug
@@ -25,36 +27,19 @@ jobs:
           slug="${branch//\//-}"
           echo "slug=$slug" >> "$GITHUB_OUTPUT"
 
-      - name: Seed site from live Pages
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          base=https://limadelic.github.io/eli
-          mkdir -p site
-          fetch() {
-            tmp=$(mktemp)
-            code=$(curl -sSL -o "$tmp" -w '%{http_code}' "$1") || exit 1
-            case $code in
-              200) mv "$tmp" "$2" ;;
-              404) ;;
-              *) echo "HTTP $code for $1" >&2; exit 1 ;;
-            esac
-          }
-          for file in report.html cukes.json; do
-            fetch "$base/$file" "site/$file"
-          done
-          { git branch -r | sed 's/^[[:space:]]*origin\///' | grep -v '^HEAD'; gh pr list --state open --limit 1000 --json number --jq '.[].number'; } | sort -u | while read -r dir; do
-            mkdir -p "site/$dir"
-            for file in report.html cukes.json; do
-              fetch "$base/$dir/$file" "site/$dir/$file"
-            done
-          done
-
       - name: Download cukes HTML artifact
         uses: actions/download-artifact@v4
         with:
           name: cukes-html-${{ steps.branch_slug.outputs.slug }}
           path: site
+
+      - name: Commit and push gh-pages
+        working-directory: site
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet || { git commit -m "Update site from run ${{ github.run_id }}" && git push origin HEAD:gh-pages; }
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

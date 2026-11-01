@@ -60,6 +60,7 @@ jobs:
       group: pages
       cancel-in-progress: false
     permissions:
+      contents: write
       pages: write
       id-token: write
     uses: ./.github/workflows/site.yml
