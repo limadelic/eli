@@ -79,3 +79,17 @@ Feature: skill
       * the exit code is 1
       * the output is exactly
         | wide/SKILL.md:9 skill.width 81 > 80 |
+
+    Scenario: a long link passes
+      * > touch wide/SKILL.md
+        """
+        # Wide
+
+        Short.
+        See [the long docs](https://example.com/abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz).
+        abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabc
+        """
+      * > run wide
+      * the exit code is 1
+      * the output is exactly
+        | wide/SKILL.md:5 skill.width 81 > 80 |
