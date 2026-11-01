@@ -106,4 +106,4 @@ Feature: skill
       * > run wide
       * the exit code is 1
       * the output is exactly
-        | wide/SKILL.md:5 skill.width 103 > 80 |
+        | wide/SKILL.md:5 skill.width 102 > 80 |
