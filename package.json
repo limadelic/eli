@@ -6,7 +6,7 @@
     "eli": "bin/eli.js"
   },
   "scripts": {
-    "lint": "prettier --check . && eslint . && jscpd --threshold 0 --min-lines 3 --min-tokens 20 --format javascript --reporters console --ignore \"**/node_modules/**\" --ignore \"**/vendor/**\" --ignore \"**/reports/**\" --ignore \"**/site/**\" . && bundle exec rubocop",
+    "lint": "prettier --check . && eslint . && jscpd --threshold 0 --min-lines 3 --min-tokens 20 --format javascript --reporters console --ignore \"**/node_modules/**\" --ignore \"**/vendor/**\" --ignore \"**/reports/**\" . && bundle exec rubocop",
     "test": "bundle exec cucumber",
     "tcr": "bin/tcr"
   },
@@ -15,5 +15,9 @@
     "eslint": "^10.13.0",
     "jscpd": "^5.4.2",
     "prettier": "^3.9.10"
+  },
+  "dependencies": {
+    "remark": "^15.0.1",
+    "yaml": "^2.9.1"
   }
 }

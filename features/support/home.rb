@@ -4,11 +4,11 @@ require 'open3'
 
 module Home
   def run(args)
-    output, = Open3.capture2e({ 'HOME' => home }, "eli #{args}")
+    output, = Open3.capture2e({ 'HOME' => home }, "eli #{args}", chdir: @cwd || home)
     output
   end
 
   def home
-    File.expand_path('../home', __dir__)
+    @home
   end
 end
