@@ -40,3 +40,10 @@ Feature: Len
       ```
       """
     * > eli fenced
+
+  Scenario: a url line passes
+    * > touch url/SKILL.md
+      """
+      https://example.com/a/very/long/path
+      """
+    * > eli url
