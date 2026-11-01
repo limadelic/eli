@@ -1,0 +1,33 @@
+name: Badge
+description: Write the cukes badge block into the open PR body
+
+inputs:
+  run-id:
+    description: Run id in the badge URL, busts the camo cache
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Find open PR for branch
+      id: pr
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+        BRANCH: ${{ github.head_ref || github.ref_name }}
+      run: |
+        number=$(gh pr list --head "$BRANCH" --state open --json number -q '.[0].number // empty')
+        echo "number=$number" >> "$GITHUB_OUTPUT"
+
+    - name: Add badge block to PR
+      if: steps.pr.outputs.number != ''
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+        PR_NUMBER: ${{ steps.pr.outputs.number }}
+        PREFIX: ${{ steps.pr.outputs.number }}/
+        RUN_ID: ${{ inputs.run-id }}
+      run: |
+        gh pr view "$PR_NUMBER" --json body -q .body > /tmp/body.md
+        ruby ops/ci/badges/body.rb
+        gh pr edit "$PR_NUMBER" --body-file /tmp/body.md
