@@ -15,12 +15,12 @@ const text = fs.readFileSync(
 );
 
 const found = configure(settings).flatMap(({ rule, severity, options }) =>
-  rule.check(text, options).map((hit) => ({ ...hit, id: rule.id, severity })),
+  rule.check(text, options).map((hit) => ({ ...hit, severity })),
 );
 
 unknown(settings).forEach((id) => console.log(`.eli.yml unknown rule ${id}`));
 found.forEach((hit) =>
-  console.log(`${name}/SKILL.md:${hit.line} ${hit.message} ${hit.id}`),
+  console.log(`${name}/SKILL.md:${hit.line} ${hit.message}`),
 );
 
 process.exitCode = Math.max(

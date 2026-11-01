@@ -95,3 +95,16 @@ Feature: Config
     * > cd proj
     * > eli --config ../flag.yml long
       | long/SKILL.md:10 lines 10 > 9 max-lines |
+
+  Scenario: a nested skill width sets the limit
+    * > touch .eli.yml
+      """
+      skill:
+        width: 10
+      """
+    * > touch short/SKILL.md
+      """
+      abcdefghijklm
+      """
+    * > eli short
+      | short/SKILL.md:1 skill.width 13 > 10 |
