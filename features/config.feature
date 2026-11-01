@@ -110,22 +110,30 @@ Feature: Config
         """
         section:
           width: of
+          steps: [warn, x]
         step:
           lines:
         skill:
           lines: true
           sections: [loud, 3]
-        agent:
+        agent: 5
+        """
+      * > touch flag.yml
+        """
+        skill:
+          width: wide
         """
       * > touch short/SKILL.md
         """
         # Short
         """
-      * > run short
+      * > run --config flag.yml short
       * the output is exactly
-        | .eli.yml section.width: invalid value of |
+        | flag.yml skill.width: invalid value "wide" |
+        | .eli.yml section.width: invalid value "of" |
+        | .eli.yml section.steps: invalid value ["warn","x"] |
         | .eli.yml step.lines: invalid value null |
         | .eli.yml skill.lines: invalid value true |
-        | .eli.yml skill.sections: invalid value loud,3 |
-        | .eli.yml agent: invalid value null |
+        | .eli.yml skill.sections: invalid value ["loud",3] |
+        | .eli.yml agent: invalid value 5 |
       * the exit code is 2

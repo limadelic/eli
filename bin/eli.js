@@ -10,28 +10,30 @@ import { shaped } from "../lib/values.js";
 const argv = process.argv.slice(2);
 const cwd = process.cwd();
 const names = argv.filter((arg, i) => ![arg, argv[i - 1]].includes("--config"));
-const settings = load(argv, cwd, homedir());
-const values = shaped(settings);
+const home = fs.realpathSync(homedir());
+const settings = load(argv, cwd, home);
+const bad = invalid(argv, cwd, home);
 
 const fire =
-  (text) =>
+  (text, values) =>
   ({ rule, severity, options }) =>
     rule
       .check(text, options, values)
       .map((hit) => ({ id: rule.id, severity, ...hit }));
 
-const lint = (file) =>
+const lint = (values) => (file) =>
   configure(values, kind(file))
-    .flatMap(fire(fs.readFileSync(file, "utf8")))
+    .flatMap(fire(fs.readFileSync(file, "utf8"), values))
     .map((hit) => ({ ...hit, path: relative(cwd, file) }));
 
-const bad = invalid(settings);
-const found = bad.length ? [] : targets(names).flatMap(lint);
+const found = bad.length ? [] : targets(names).flatMap(lint(shaped(settings)));
 
 const label = { warn: "warn ", error: "" };
 
-bad.forEach(([id, value]) =>
-  console.log(`.eli.yml ${id}: invalid value ${value}`),
+bad.forEach(({ path, id, value }) =>
+  console.log(
+    `${relative(cwd, path)} ${id}: invalid value ${JSON.stringify(value)}`,
+  ),
 );
 unknown(settings).forEach((id) => console.log(`.eli.yml unknown rule ${id}`));
 found.forEach((hit) =>
