@@ -43,6 +43,7 @@ jobs:
           color: ${{ steps.cukes.outputs.color }}
           files: reports/cucumber.json reports/report.html
           link: report.html
+          logo: cucumber
 
       - name: Upload Cucumber report artifact
         uses: actions/upload-artifact@v4
