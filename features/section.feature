@@ -54,4 +54,4 @@ Feature: section
       * > run wide
       * the exit code is 0
       * the output is exactly
-        | wide/SKILL.md:3 skill.width 85 > 80 |
+        | wide/SKILL.md:3 warn skill.width 85 > 80 |

@@ -20,10 +20,13 @@ const found = configure(settings).flatMap(({ rule, severity, options }) =>
     .map((hit) => ({ id: rule.id, severity, ...hit })),
 );
 
+const label = { warn: "warn ", error: "" };
+
 unknown(settings).forEach((id) => console.log(`.eli.yml unknown rule ${id}`));
 found.forEach((hit) =>
   console.log(
-    `${name}/SKILL.md:${hit.line} ${hit.id} ${hit.actual} > ${hit.max}`,
+    `${name}/SKILL.md:${hit.line} ${label[hit.severity]}${hit.id}`,
+    `${hit.actual} > ${hit.max}`,
   ),
 );
 
