@@ -9,6 +9,7 @@ Feature: skill
 
         Short.
         Ok.
+        abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefgh🎸🎸🎸🎸🎸🎸🎸🎸🎸🎸
 
         ```
         abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghi
@@ -23,8 +24,8 @@ Feature: skill
       * > run wide
       * the exit code is 1
       * the output is exactly
-        | wide/SKILL.md:12 skill.width 102 > 80 |
-        | wide/SKILL.md:14 skill.width 81 > 80 |
+        | wide/SKILL.md:13 skill.width 102 > 80 |
+        | wide/SKILL.md:15 skill.width 81 > 80 |
 
   Rule: lines
 
