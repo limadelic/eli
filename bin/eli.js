@@ -17,7 +17,7 @@ const text = fs.readFileSync(
 const found = configure(settings).flatMap(({ rule, severity, options }) =>
   rule
     .check(text, options, settings)
-    .map((hit) => ({ id: rule.id, ...hit, severity })),
+    .map((hit) => ({ id: rule.id, severity, ...hit })),
 );
 
 unknown(settings).forEach((id) => console.log(`.eli.yml unknown rule ${id}`));
