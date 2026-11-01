@@ -19,6 +19,12 @@ When(/^> run (.+)$/) do |args|
   @output = run(args)
 end
 
+When(/^> sample \.eli\.yml from the README$/) do
+  file = File.join(home, '.claude', 'skills', '.eli.yml')
+  FileUtils.mkdir_p(File.dirname(file))
+  File.write(file, readme_sample)
+end
+
 Then(/^the output is exactly$/) do |table|
   expect(@output.lines(chomp: true)).to eq(table.raw.flatten)
 end
@@ -29,6 +35,11 @@ end
 
 Then(/^the exit code is (\d+)$/) do |code|
   expect(@status.exitstatus).to eq(code.to_i)
+end
+
+def readme_sample
+  readme = File.expand_path('../../README.md', __dir__)
+  File.read(readme)[/^```ya?ml\n(.*?)^```/m, 1] || raise('no yaml block in README')
 end
 
 def expect_lines(table, output)

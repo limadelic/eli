@@ -142,3 +142,15 @@ Feature: Config
         | .eli.yml skill.section.width: invalid value ["warn",3,9] |
         | .eli.yml agent: invalid value 5 |
       * the exit code is 2
+
+  Rule: readme sample
+
+    Scenario: the README config sample loads clean
+      * > sample .eli.yml from the README
+      * > touch short/SKILL.md
+        """
+        # Short
+        """
+      * > run short
+      * the exit code is 0
+      * the output is empty
