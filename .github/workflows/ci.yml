@@ -93,3 +93,17 @@ jobs:
       - uses: ./.github/actions/badge
         with:
           run-id: ${{ github.run_id }}
+
+  check:
+    needs: [badge]
+    if: ${{ !cancelled() && needs.badge.result != 'skipped' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - run: ruby ops/ci/check/check.rb
+        env:
+          GH_TOKEN: ${{ github.token }}
