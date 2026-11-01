@@ -26,3 +26,16 @@ Feature: Config
       ## h
       """
     * > eli wide
+
+  Scenario: an unknown rule id is reported
+    * > touch .eli.yml
+      """
+      max-foo:
+        - error
+      """
+    * > touch short/SKILL.md
+      """
+      # Short
+      """
+    * > eli short
+      | .eli.yml unknown rule max-foo |
