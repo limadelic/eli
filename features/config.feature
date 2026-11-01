@@ -89,3 +89,43 @@ Feature: Config
     * > cd proj
     * > eli --config ../flag.yml long
       | long/SKILL.md:4 skill.lines 4 > 3 |
+
+  Scenario: warn reports and exits 0
+    * > touch .eli.yml
+      """
+      skill:
+        width: [warn, 10]
+      """
+    * > touch wide/SKILL.md
+      """
+      # Wide
+
+      Short.
+      Ok.
+      Fine.
+      abcdefghijk
+      """
+    * > run wide
+    * the exit code is 0
+    * the output is exactly
+      | wide/SKILL.md:6 skill.width 11 > 10 |
+
+  Scenario: off reports nothing
+    * > touch .eli.yml
+      """
+      skill:
+        width: off
+      """
+    * > touch wide/SKILL.md
+      """
+      # Wide
+
+      Short.
+      Ok.
+      Fine.
+      Done.
+      abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabc
+      """
+    * > run wide
+    * the exit code is 0
+    * the output is empty
