@@ -10,10 +10,6 @@ on:
 permissions:
   contents: read
 
-concurrency:
-  group: body-${{ github.head_ref || github.ref_name }}
-  cancel-in-progress: false
-
 jobs:
   lint:
     runs-on: ubuntu-latest
