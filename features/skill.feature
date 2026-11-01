@@ -20,12 +20,17 @@ Feature: skill
         Read the full migration guide before you touch any file in the repo, it lists every step you need, see https://example.com/abc
 
         abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabc
+
+        ## Part
+
+        abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabc
         """
       * > run wide
       * the exit code is 1
       * the output is exactly
         | wide/SKILL.md:13 skill.width 102 > 80 |
         | wide/SKILL.md:15 skill.width 81 > 80 |
+        | wide/SKILL.md:19 skill.width 81 > 80 |
 
   Rule: lines
 
@@ -34,6 +39,14 @@ Feature: skill
         """
         skill:
           lines: 5
+        """
+      * > touch fit/SKILL.md
+        """
+        # Fit
+
+        Ok.
+        Ok.
+        Ok.
         """
       * > touch long/SKILL.md
         """
@@ -44,6 +57,7 @@ Feature: skill
         Ok.
         Ok.
         """
+      * > eli fit
       * > run long
       * the exit code is 1
       * the output is exactly
@@ -56,6 +70,16 @@ Feature: skill
         """
         skill:
           sections: 2
+        """
+      * > touch fit/SKILL.md
+        """
+        # Fit
+
+        ## a
+
+        ### a1
+
+        ## b
         """
       * > touch wide/SKILL.md
         """
@@ -73,6 +97,7 @@ Feature: skill
 
         ## c
         """
+      * > eli fit
       * > run wide
       * the exit code is 1
       * the output is exactly
