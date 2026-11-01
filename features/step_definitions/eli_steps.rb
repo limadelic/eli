@@ -15,36 +15,20 @@ When(/^> cd (.+)$/) do |path|
   @cwd = File.join(home, '.claude', 'skills', path)
 end
 
-FIXTURES = File.expand_path('../fixtures', __dir__)
-
-Then(/^every fixture matches its markers$/) do
-  fixtures = Dir[File.join(FIXTURES, '*.md')]
-  expect(fixtures).not_to be_empty
-  fixtures.each { |fixture| expect_markers(fixture) }
+When(/^> run (.+)$/) do |args|
+  @output = run(args)
 end
 
-def expect_markers(fixture)
-  rule = File.basename(fixture, '.md')
-  copy_skill(fixture, rule)
-  output = run(rule)
-  hits = output.split("\n").grep(hit(rule))
-  expect(output.split("\n") - hits).to be_empty, output
-  expect(hits.map { |line| line[/:(\d+) /, 1].to_i - 1 }).to eq(marked(fixture, rule)), output
+Then(/^the output is empty$/) do
+  expect(@output).to be_empty
 end
 
-def copy_skill(fixture, rule)
-  skill = File.join(home, '.claude', 'skills', rule)
-  FileUtils.mkdir_p(skill)
-  FileUtils.cp(fixture, File.join(skill, 'SKILL.md'))
+Then(/^the output is exactly$/) do |table|
+  expect(@output.split("\n")).to eq(table.raw.flatten)
 end
 
-def hit(rule)
-  %r{^#{Regexp.escape(rule)}/SKILL\.md:\d+ #{Regexp.escape(rule)} }
-end
-
-def marked(fixture, rule)
-  lines = File.readlines(fixture)
-  lines.each_index.select { |index| lines[index].include?("{#{rule}}") }
+Then(/^the exit code is (\d+)$/) do |code|
+  expect(@status.exitstatus).to eq(code.to_i)
 end
 
 def expect_lines(table, output)

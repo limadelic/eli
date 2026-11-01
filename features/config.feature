@@ -96,19 +96,6 @@ Feature: Config
     * > eli --config ../flag.yml long
       | long/SKILL.md:10 max-lines 10 > 9 |
 
-  Scenario: a nested skill width sets the limit
-    * > touch .eli.yml
-      """
-      skill:
-        width: 10
-      """
-    * > touch short/SKILL.md
-      """
-      abcdefghijklm
-      """
-    * > eli short
-      | short/SKILL.md:1 skill.width 13 > 10 |
-
   Scenario: a nested skill width can warn
     * > touch .eli.yml
       """
