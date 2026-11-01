@@ -31,3 +31,12 @@ Feature: Len
       """
     * > eli long
       | long/SKILL.md:3 len 21 > 20 max-len |
+
+  Scenario: a fenced line passes
+    * > touch fenced/SKILL.md
+      """
+      ```
+      abcdefghijklmnopqrstuvwxyz1234
+      ```
+      """
+    * > eli fenced
