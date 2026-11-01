@@ -2,6 +2,7 @@ name: CI
 
 on:
   push:
+    branches-ignore: [gh-pages]
   pull_request:
     types: [opened, reopened]
   workflow_dispatch:
@@ -54,6 +55,7 @@ jobs:
 
   site:
     needs: [cukes]
+    if: ${{ !cancelled() }}
     concurrency:
       group: pages
       cancel-in-progress: false
@@ -64,6 +66,7 @@ jobs:
 
   badge:
     needs: [site]
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
