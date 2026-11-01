@@ -1,9 +1,11 @@
 Feature: Lines
 
   Background:
-    * > touch elle/rules.md
+    * > touch .eli.yml
       """
-      - A file: max 2 sections, max 9 lines
+      max-lines:
+        - error
+        - max: 9
       """
 
   Scenario: a long skill fails
@@ -21,7 +23,7 @@ Feature: Lines
       - eight
       """
     * > eli long
-      | long/SKILL.md:10 lines 10 > 9 |
+      | long/SKILL.md:10 lines 10 > 9 max-lines |
 
   Scenario: a short skill passes
     * > touch short/SKILL.md

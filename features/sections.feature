@@ -1,9 +1,11 @@
 Feature: Sections
 
   Background:
-    * > touch elle/rules.md
+    * > touch .eli.yml
       """
-      - A file: max 2 sections, max 9 lines
+      max-sections:
+        - error
+        - max: 2
       """
 
   Scenario: a wide skill fails
@@ -18,7 +20,7 @@ Feature: Sections
       ## c
       """
     * > eli wide
-      | wide/SKILL.md:7 sections 3 > 2 |
+      | wide/SKILL.md:7 sections 3 > 2 max-sections |
 
   Scenario: a narrow skill passes
     * > touch narrow/SKILL.md
