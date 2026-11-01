@@ -93,3 +93,17 @@ Feature: skill
       * the exit code is 1
       * the output is exactly
         | wide/SKILL.md:5 skill.width 81 > 80 |
+
+    Scenario: a long line with a link still fails on its prose
+      * > touch wide/SKILL.md
+        """
+        # Wide
+
+        Short.
+        Ok.
+        Read the full migration guide before you touch any file in the repo, it lists every step you need, see https://example.com/abc
+        """
+      * > run wide
+      * the exit code is 1
+      * the output is exactly
+        | wide/SKILL.md:5 skill.width 103 > 80 |
