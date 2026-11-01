@@ -5,6 +5,10 @@ inputs:
   run-id:
     description: Run id in the badge URL, busts the camo cache
     required: true
+  only-missing:
+    description: Skip the edit when the PR body already has a badge block
+    required: false
+    default: "false"
 
 runs:
   using: composite
@@ -27,7 +31,11 @@ runs:
         PR_NUMBER: ${{ steps.pr.outputs.number }}
         PREFIX: ${{ steps.pr.outputs.number }}/
         RUN_ID: ${{ inputs.run-id }}
+        ONLY_MISSING: ${{ inputs.only-missing }}
       run: |
         gh pr view "$PR_NUMBER" --json body -q .body > /tmp/body.md
+        if [ "$ONLY_MISSING" = true ] && grep -q '<!-- badges-start -->' /tmp/body.md; then
+          exit 0
+        fi
         ruby ops/ci/badges/body.rb
         gh pr edit "$PR_NUMBER" --body-file /tmp/body.md
