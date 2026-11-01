@@ -66,6 +66,9 @@ jobs:
     uses: ./.github/workflows/site.yml
 
   body:
+    concurrency:
+      group: body-${{ github.head_ref || github.ref_name }}
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -81,6 +84,9 @@ jobs:
   badge:
     needs: [site]
     if: ${{ !cancelled() && needs.site.result != 'skipped' }}
+    concurrency:
+      group: body-${{ github.head_ref || github.ref_name }}
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     permissions:
       contents: read
