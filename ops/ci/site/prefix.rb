@@ -5,6 +5,8 @@ require 'open3'
 require 'uri'
 
 module Prefix
+  PROTECTED = %w[main badges]
+
   def self.run
     ARGV.first == 'prune' ? puts(prune(ENV)) : run_compute
   end
@@ -18,9 +20,17 @@ module Prefix
 
   def self.prune(env)
     branch = env.fetch('DELETED_BRANCH', '')
-    return ["#{slug(branch)}/"] unless branch.empty?
+    return [] if protected?(branch)
 
-    ["#{env.fetch('PR_NUMBER')}/"]
+    ["#{prune_name(branch, env)}/"]
+  end
+
+  def self.prune_name(branch, env)
+    branch.empty? ? env.fetch('PR_NUMBER') : slug(branch)
+  end
+
+  def self.protected?(branch)
+    PROTECTED.include?(branch)
   end
 
   def self.compute(branch)
