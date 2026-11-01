@@ -13,6 +13,7 @@ const names = argv.filter((arg, i) => ![arg, argv[i - 1]].includes("--config"));
 const home = fs.realpathSync(homedir());
 const settings = load(argv, cwd, home);
 const bad = invalid(argv, cwd, home);
+const gone = unknown(argv, cwd, home);
 
 const fire =
   (text, values) =>
@@ -35,7 +36,9 @@ bad.forEach(({ path, id, value }) =>
     `${relative(cwd, path)} ${id}: invalid value ${JSON.stringify(value)}`,
   ),
 );
-unknown(settings).forEach((id) => console.log(`.eli.yml unknown rule ${id}`));
+gone.forEach(({ path, id }) =>
+  console.log(`${relative(cwd, path)} unknown rule ${id}`),
+);
 found.forEach((hit) =>
   console.log(
     `${hit.path}:${hit.line} ${label[hit.severity]}${hit.id}`,
@@ -46,6 +49,6 @@ found.forEach((hit) =>
 process.exitCode = Math.max(
   0,
   ...bad.map(() => 2),
-  ...unknown(settings).map(() => 2),
+  ...gone.map(() => 2),
   ...found.filter((hit) => hit.severity === "error").map(() => 1),
 );

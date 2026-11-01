@@ -29,7 +29,7 @@ Feature: Config
     * > eli wide
 
   Scenario: an unknown rule id is reported
-    * > touch .eli.yml
+    * > touch flag.yml
       """
       max-foo:
         - error
@@ -38,8 +38,8 @@ Feature: Config
       """
       # Short
       """
-    * > eli short
-      | .eli.yml unknown rule max-foo |
+    * > eli --config flag.yml short
+      | flag.yml unknown rule max-foo |
 
   Scenario: the nearest config wins per prop
     * > touch ../.eli.yml
@@ -116,6 +116,9 @@ Feature: Config
         skill:
           lines: true
           sections: [loud, 3]
+          section:
+            steps: [warn]
+            width: [warn, 3, 9]
         agent: 5
         """
       * > touch flag.yml
@@ -127,7 +130,7 @@ Feature: Config
         """
         # Short
         """
-      * > run --config flag.yml short
+      * > run --config flag.yml --config .eli.yml short
       * the output is exactly
         | flag.yml skill.width: invalid value "wide" |
         | .eli.yml section.width: invalid value "of" |
@@ -135,5 +138,7 @@ Feature: Config
         | .eli.yml step.lines: invalid value null |
         | .eli.yml skill.lines: invalid value true |
         | .eli.yml skill.sections: invalid value ["loud",3] |
+        | .eli.yml skill.section.steps: invalid value ["warn"] |
+        | .eli.yml skill.section.width: invalid value ["warn",3,9] |
         | .eli.yml agent: invalid value 5 |
       * the exit code is 2
