@@ -50,3 +50,17 @@ Feature: Bullets
       - four
       """
     * > eli sections
+
+  Scenario: nested bullets do not count
+    * > touch nested/SKILL.md
+      """
+      # Nested
+
+      ## a
+
+      - one
+        - one a
+        - one b
+      - two
+      """
+    * > eli nested
