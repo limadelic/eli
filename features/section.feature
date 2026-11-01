@@ -76,3 +76,33 @@ Feature: section
       * the exit code is 0
       * the output is exactly
         | wide/SKILL.md:3 warn skill.width 65 > 60 |
+
+  Rule: steps
+
+    Scenario: a section over its steps fails
+      * > touch .eli.yml
+        """
+        section:
+          steps: 2
+        """
+      * > touch steps/SKILL.md
+        """
+        # Steps
+
+        ## a
+
+        - one
+        - two
+
+        ## b
+
+        - three
+        - four
+        - five
+          - five a
+          - five b
+        """
+      * > run steps
+      * the exit code is 1
+      * the output is exactly
+        | steps/SKILL.md:12 section.steps 3 > 2 |
