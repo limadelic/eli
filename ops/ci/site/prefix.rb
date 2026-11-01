@@ -1,5 +1,9 @@
 #!/usr/bin/env ruby
 
+require 'json'
+require 'open3'
+require 'uri'
+
 module Prefix
   def self.run
     branch = ENV['BRANCH']
@@ -15,6 +19,15 @@ module Prefix
   end
 
   def self.pr_or_branch(branch)
+    event_pr_number || branch_pr(branch)
+  end
+
+  def self.event_pr_number
+    number = ENV.fetch('PR_NUMBER', '')
+    number unless number.empty?
+  end
+
+  def self.branch_pr(branch)
     fetch_pr(branch) || branch
   end
 
@@ -23,10 +36,32 @@ module Prefix
   end
 
   def self.fetch_pr(branch)
-    cmd = "gh api repos/#{ENV['GITHUB_REPOSITORY']}/pulls -q " \
-          "\".[] | select(.head.ref==\\\"#{branch}\\\") | .number\" | head -1"
-    result = `#{cmd} 2>/dev/null`.chomp
-    result.empty? ? nil : result
+    pulls(branch).map { |pr| pr['number'].to_s }.first
+  end
+
+  def self.pulls(branch)
+    JSON.parse(gh(pulls_path(branch)))
+  rescue JSON::ParserError
+    abort 'prefix: gh api returned bad JSON'
+  end
+
+  def self.pulls_path(branch)
+    repo = ENV.fetch('GITHUB_REPOSITORY')
+    owner = repo.split('/').first
+    query = URI.encode_www_form('state' => 'open', 'head' => "#{owner}:#{branch}", 'per_page' => 100)
+    "repos/#{repo}/pulls?#{query}"
+  end
+
+  def self.gh(path)
+    out, err, status = capture(path)
+    abort "prefix: gh api #{path} failed: #{err.strip}" unless status.success?
+    out
+  end
+
+  def self.capture(path)
+    Open3.capture3('gh', 'api', path)
+  rescue Errno::ENOENT
+    abort 'prefix: gh not found on PATH'
   end
 end
 

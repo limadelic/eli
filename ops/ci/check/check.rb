@@ -24,9 +24,34 @@ module Check
 
   def self.failures
     sources = camo_sources
-    statics(sources) + unsettled(sources)
-  rescue JSON::ParserError
-    ['gh pr list failed']
+    statics(sources) + unsettled(sources) + stale_messages
+  rescue JSON::ParserError, KeyError
+    ['gh call failed']
+  end
+
+  def self.stale_messages
+    stale_dirs.map { |dir| "stale gh-pages dir: #{dir}/" }
+  end
+
+  def self.stale_dirs
+    numbers = open_numbers
+    stored_dirs.reject { |dir| numbers.include?(dir) }
+  end
+
+  def self.open_numbers
+    open_prs.values.map(&:to_s)
+  end
+
+  def self.stored_dirs
+    trees.map { |entry| entry['path'] }
+  end
+
+  def self.trees
+    tree_entries.select { |entry| entry['type'] == 'tree' }
+  end
+
+  def self.tree_entries
+    JSON.parse(`gh api "repos/#{REPO}/git/trees/gh-pages"`).fetch('tree')
   end
 
   def self.statics(sources)
