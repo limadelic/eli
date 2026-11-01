@@ -23,7 +23,7 @@ Feature: Lines
       - eight
       """
     * > eli long
-      | long/SKILL.md:10 lines 10 > 9 max-lines |
+      | long/SKILL.md:10 max-lines 10 > 9 |
 
   Scenario: a short skill passes
     * > touch short/SKILL.md

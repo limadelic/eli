@@ -18,7 +18,9 @@ end
 FIXTURES = File.expand_path('../fixtures', __dir__)
 
 Then(/^every fixture matches its markers$/) do
-  Dir[File.join(FIXTURES, '*.md')].each { |fixture| expect_markers(fixture) }
+  fixtures = Dir[File.join(FIXTURES, '*.md')]
+  expect(fixtures).not_to be_empty
+  fixtures.each { |fixture| expect_markers(fixture) }
 end
 
 def expect_markers(fixture)

@@ -20,7 +20,7 @@ Feature: Sections
       ## c
       """
     * > eli wide
-      | wide/SKILL.md:7 sections 3 > 2 max-sections |
+      | wide/SKILL.md:7 max-sections 3 > 2 |
 
   Scenario: a narrow skill passes
     * > touch narrow/SKILL.md

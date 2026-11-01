@@ -64,7 +64,7 @@ Feature: Config
       """
     * > cd proj
     * > eli long
-      | long/SKILL.md:10 lines 10 > 9 max-lines |
+      | long/SKILL.md:10 max-lines 10 > 9 |
 
   Scenario: the --config flag beats project and home configs
     * > touch .eli.yml
@@ -94,7 +94,7 @@ Feature: Config
       """
     * > cd proj
     * > eli --config ../flag.yml long
-      | long/SKILL.md:10 lines 10 > 9 max-lines |
+      | long/SKILL.md:10 max-lines 10 > 9 |
 
   Scenario: a nested skill width sets the limit
     * > touch .eli.yml
@@ -108,3 +108,28 @@ Feature: Config
       """
     * > eli short
       | short/SKILL.md:1 skill.width 13 > 10 |
+
+  Scenario: a nested skill width can warn
+    * > touch .eli.yml
+      """
+      skill:
+        width: [warn, 10]
+      """
+    * > touch short/SKILL.md
+      """
+      abcdefghijklm
+      """
+    * > eli short
+      | short/SKILL.md:1 skill.width 13 > 10 |
+
+  Scenario: a nested skill width can be off
+    * > touch .eli.yml
+      """
+      skill:
+        width: off
+      """
+    * > touch short/SKILL.md
+      """
+      abcdefghijklm
+      """
+    * > eli short
