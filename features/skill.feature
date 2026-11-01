@@ -7,6 +7,8 @@ Feature: skill
         """
         code:
           width: 80
+        link:
+          width: 40
         """
       * > touch wide/SKILL.md
         """
@@ -20,7 +22,7 @@ Feature: skill
         abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghi
         ```
 
-        See [the long docs](https://example.com/abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz).
+        See [the long docs](https://example.com/abc).
 
         Read the full migration guide before you touch any file in the repo, it lists every step you need, see https://example.com/abc
 
@@ -29,6 +31,8 @@ Feature: skill
         ## Part
 
         abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabc
+
+        Mirror https://example.com/abcdefghijklmnopqrstuvwxyzabcd
         """
       * > run wide
       * the exit code is 1
@@ -37,6 +41,7 @@ Feature: skill
         | wide/SKILL.md:13 skill.width 102 > 80 |
         | wide/SKILL.md:15 skill.width 81 > 80 |
         | wide/SKILL.md:19 skill.width 81 > 80 |
+        | wide/SKILL.md:21 link.width 50 > 40 |
 
   Rule: lines
 
