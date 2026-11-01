@@ -56,7 +56,7 @@ Feature: skill
         Ok.
         Fine.
         Done.
-        abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz
+        abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabc
         """
       * > run wide
       * the exit code is 0
