@@ -65,3 +65,33 @@ Feature: Config
     * > cd proj
     * > eli long
       | long/SKILL.md:10 lines 10 > 9 max-lines |
+
+  Scenario: the --config flag beats project and home configs
+    * > touch .eli.yml
+      """
+      max-lines: [error, {max: 2}]
+      """
+    * > touch proj/.eli.yml
+      """
+      max-lines: [error, {max: 2}]
+      """
+    * > touch flag.yml
+      """
+      max-lines: [error, {max: 9}]
+      """
+    * > touch long/SKILL.md
+      """
+      # Long
+
+      - one
+      - two
+      - three
+      - four
+      - five
+      - six
+      - seven
+      - eight
+      """
+    * > cd proj
+    * > eli --config ../flag.yml long
+      | long/SKILL.md:10 lines 10 > 9 max-lines |
