@@ -54,6 +54,9 @@ jobs:
 
   site:
     needs: [cukes]
+    concurrency:
+      group: pages
+      cancel-in-progress: false
     permissions:
       pages: write
       id-token: write
