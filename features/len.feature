@@ -15,6 +15,13 @@ Feature: Len
       """
     * > eli short
 
+  Scenario: an emoji counts as one char
+    * > touch emoji/SKILL.md
+      """
+      abcdefghijklmnopqrs🎸
+      """
+    * > eli emoji
+
   Scenario: a long skill fails
     * > touch long/SKILL.md
       """
