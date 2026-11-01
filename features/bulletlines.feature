@@ -19,3 +19,17 @@ Feature: Bullet lines
         three
       """
     * > eli short
+
+  Scenario: a long bullet fails
+    * > touch long/SKILL.md
+      """
+      # Long
+
+      ## a
+
+      - one
+        two
+        three
+      """
+    * > eli long
+      | long/SKILL.md:5 lines 3 > 2 max-bullet-lines |
