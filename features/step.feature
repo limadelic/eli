@@ -180,3 +180,68 @@ Feature: step
       * the exit code is 1
       * the output is exactly
         | code/SKILL.md:5 step 30 > 25 |
+
+  Rule: bullet
+
+    Scenario: a numbered step fails the default bullet
+      * > touch numbered/SKILL.md
+        """
+        # Numbered
+
+        ## a
+
+        1. one
+        2. two
+        """
+      * > run numbered
+      * the exit code is 1
+      * the output is exactly
+        | numbered/SKILL.md:5 bullet 1. > - |
+        | numbered/SKILL.md:6 bullet 2. > - |
+
+    Scenario: a star step fails the default bullet
+      * > touch star/SKILL.md
+        """
+        # Star
+
+        ## a
+
+        * one
+        """
+      * > run star
+      * the exit code is 1
+      * the output is exactly
+        | star/SKILL.md:5 bullet * > - |
+
+    Scenario: a plus step fails the default bullet
+      * > touch plus/SKILL.md
+        """
+        # Plus
+
+        ## a
+
+        + one
+        """
+      * > run plus
+      * the exit code is 1
+      * the output is exactly
+        | plus/SKILL.md:5 bullet + > - |
+
+    Scenario: the top-level bullet key sets the marker
+      * > touch .eli.yml
+        """
+        bullet: "*"
+        """
+      * > touch dash/SKILL.md
+        """
+        # Dash
+
+        ## a
+
+        * one
+        - two
+        """
+      * > run dash
+      * the exit code is 1
+      * the output is exactly
+        | dash/SKILL.md:6 bullet - > * |
