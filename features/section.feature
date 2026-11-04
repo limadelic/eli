@@ -167,6 +167,35 @@ Feature: section
       * the output is exactly
         | few/SKILL.md:9 steps 3 > 2 |
 
+    Scenario: the top-level steps count bullets, paragraphs, tables and code
+      * > touch .eli.yml
+        """
+        steps: 3
+        """
+      * > touch mixed/SKILL.md
+        """
+        # Mixed
+
+        ## a
+
+        - one
+        - two
+
+        Three.
+
+        | a | b |
+        | - | - |
+        | 1 | 2 |
+
+        ```
+        code
+        ```
+        """
+      * > run mixed
+      * the exit code is 1
+      * the output is exactly
+        | mixed/SKILL.md:10 steps 5 > 3 |
+
   Rule: sections
 
     Scenario: a file over the top-level sections fails
