@@ -116,3 +116,48 @@ Feature: section
       * the exit code is 1
       * the output is exactly
         | steps/SKILL.md:12 section.steps 3 > 2 |
+  Rule: sections
+
+    Scenario: a file over the top-level sections fails
+      * > touch wide/SKILL.md
+        """
+        # Wide
+
+        ## a
+
+        ## b
+
+        ## c
+
+        ## d
+
+        ## e
+
+        ## f
+
+        ## g
+
+        ## h
+        """
+      * > eli wide
+        | wide/SKILL.md:17 sections 8 > 7 |
+
+    Scenario: the top-level sections key sets the limit
+      * > touch .eli.yml
+        """
+        sections: 2
+        """
+      * > touch many/SKILL.md
+        """
+        # Many
+
+        ## a
+
+        ## b
+
+        ## c
+        """
+      * > run many
+      * the exit code is 1
+      * the output is exactly
+        | many/SKILL.md:7 sections 3 > 2 |
