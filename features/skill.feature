@@ -12,6 +12,10 @@ Feature: skill
         """
       * > touch wide/SKILL.md
         """
+        ---
+        name: wide
+        description: Fixture.
+        ---
         # Wide
 
         Short.
@@ -37,11 +41,11 @@ Feature: skill
       * > run wide
       * the exit code is 1
       * the output is exactly
-        | wide/SKILL.md:8 code.width 87 > 80 |
-        | wide/SKILL.md:13 skill.width 102 > 80 |
-        | wide/SKILL.md:15 skill.width 81 > 80 |
+        | wide/SKILL.md:12 code.width 87 > 80 |
+        | wide/SKILL.md:17 skill.width 102 > 80 |
         | wide/SKILL.md:19 skill.width 81 > 80 |
-        | wide/SKILL.md:21 link.width 50 > 40 |
+        | wide/SKILL.md:23 skill.width 81 > 80 |
+        | wide/SKILL.md:25 link.width 50 > 40 |
 
   Rule: lines
 
@@ -49,10 +53,14 @@ Feature: skill
       * > touch .eli.yml
         """
         skill:
-          lines: 5
+          lines: 9
         """
       * > touch fit/SKILL.md
         """
+        ---
+        name: fit
+        description: Fixture.
+        ---
         # Fit
 
         Ok.
@@ -61,6 +69,10 @@ Feature: skill
         """
       * > touch long/SKILL.md
         """
+        ---
+        name: long
+        description: Fixture.
+        ---
         # Long
 
         Ok.
@@ -72,7 +84,7 @@ Feature: skill
       * > run long
       * the exit code is 1
       * the output is exactly
-        | long/SKILL.md:6 skill.lines 6 > 5 |
+        | long/SKILL.md:10 skill.lines 10 > 9 |
 
   Rule: sections
 
@@ -84,6 +96,10 @@ Feature: skill
         """
       * > touch fit/SKILL.md
         """
+        ---
+        name: fit
+        description: Fixture.
+        ---
         # Fit
 
         ## a
@@ -94,6 +110,10 @@ Feature: skill
         """
       * > touch wide/SKILL.md
         """
+        ---
+        name: wide
+        description: Fixture.
+        ---
         # Wide
 
         ## a
@@ -112,4 +132,4 @@ Feature: skill
       * > run wide
       * the exit code is 1
       * the output is exactly
-        | wide/SKILL.md:13 skill.sections 3 > 2 |
+        | wide/SKILL.md:17 skill.sections 3 > 2 |

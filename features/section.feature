@@ -12,6 +12,10 @@ Feature: section
         """
       * > touch wide/SKILL.md
         """
+        ---
+        name: wide
+        description: Fixture.
+        ---
         # Wide
 
         abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghij
@@ -26,8 +30,8 @@ Feature: section
       * > run wide
       * the exit code is 1
       * the output is exactly
-        | wide/SKILL.md:4 skill.width 65 > 60 |
-        | wide/SKILL.md:9 warn section.width 71 > 70 |
+        | wide/SKILL.md:8 skill.width 65 > 60 |
+        | wide/SKILL.md:13 warn section.width 71 > 70 |
 
     Scenario: nested beats section, off skips only its own lines
       * > touch .eli.yml
@@ -43,6 +47,10 @@ Feature: section
         """
       * > touch wide/SKILL.md
         """
+        ---
+        name: wide
+        description: Fixture.
+        ---
         # Wide
 
         Short.
@@ -61,8 +69,8 @@ Feature: section
       * > run wide
       * the exit code is 1
       * the output is exactly
-        | wide/SKILL.md:10 skill.section.width 101 > 100 |
-        | wide/SKILL.md:13 code.width 81 > 80 |
+        | wide/SKILL.md:14 skill.section.width 101 > 100 |
+        | wide/SKILL.md:17 code.width 81 > 80 |
 
     Scenario: severity per element
       * > touch .eli.yml
@@ -74,6 +82,10 @@ Feature: section
         """
       * > touch wide/SKILL.md
         """
+        ---
+        name: wide
+        description: Fixture.
+        ---
         # Wide
 
         abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcde
@@ -85,7 +97,7 @@ Feature: section
       * > run wide
       * the exit code is 0
       * the output is exactly
-        | wide/SKILL.md:3 warn skill.width 65 > 60 |
+        | wide/SKILL.md:7 warn skill.width 65 > 60 |
 
   Rule: steps
 
@@ -97,6 +109,10 @@ Feature: section
         """
       * > touch steps/SKILL.md
         """
+        ---
+        name: steps
+        description: Fixture.
+        ---
         # Steps
 
         ## a
@@ -115,11 +131,15 @@ Feature: section
       * > run steps
       * the exit code is 1
       * the output is exactly
-        | steps/SKILL.md:12 section.steps 3 > 2 |
+        | steps/SKILL.md:16 section.steps 3 > 2 |
 
     Scenario: a section over the top-level steps fails
       * > touch many/SKILL.md
         """
+        ---
+        name: many
+        description: Fixture.
+        ---
         # Many
 
         ## a
@@ -143,7 +163,7 @@ Feature: section
       * > run many
       * the exit code is 1
       * the output is exactly
-        | many/SKILL.md:19 steps 8 > 7 |
+        | many/SKILL.md:23 steps 8 > 7 |
 
     Scenario: the top-level steps key sets the limit
       * > touch .eli.yml
@@ -152,6 +172,10 @@ Feature: section
         """
       * > touch few/SKILL.md
         """
+        ---
+        name: few
+        description: Fixture.
+        ---
         # Few
 
         ## a
@@ -165,7 +189,7 @@ Feature: section
       * > run few
       * the exit code is 1
       * the output is exactly
-        | few/SKILL.md:9 steps 3 > 2 |
+        | few/SKILL.md:13 steps 3 > 2 |
 
     Scenario: the top-level steps count bullets, paragraphs, tables and code
       * > touch .eli.yml
@@ -174,6 +198,10 @@ Feature: section
         """
       * > touch mixed/SKILL.md
         """
+        ---
+        name: mixed
+        description: Fixture.
+        ---
         # Mixed
 
         ## a
@@ -194,13 +222,17 @@ Feature: section
       * > run mixed
       * the exit code is 1
       * the output is exactly
-        | mixed/SKILL.md:10 steps 5 > 3 |
+        | mixed/SKILL.md:14 steps 5 > 3 |
 
   Rule: sections
 
     Scenario: a file over the top-level sections fails
       * > touch wide/SKILL.md
         """
+        ---
+        name: wide
+        description: Fixture.
+        ---
         # Wide
 
         ## a
@@ -220,7 +252,7 @@ Feature: section
         ## h
         """
       * > eli wide
-        | wide/SKILL.md:17 sections 8 > 7 |
+        | wide/SKILL.md:21 sections 8 > 7 |
       * the exit code is 1
 
     Scenario: the top-level sections key sets the limit
@@ -230,6 +262,10 @@ Feature: section
         """
       * > touch many/SKILL.md
         """
+        ---
+        name: many
+        description: Fixture.
+        ---
         # Many
 
         ## a
@@ -241,4 +277,4 @@ Feature: section
       * > run many
       * the exit code is 1
       * the output is exactly
-        | many/SKILL.md:7 sections 3 > 2 |
+        | many/SKILL.md:11 sections 3 > 2 |

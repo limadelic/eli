@@ -9,6 +9,10 @@ Feature: step
         """
       * > touch steps/SKILL.md
         """
+        ---
+        name: steps
+        description: Fixture.
+        ---
         # Steps
 
         ## a
@@ -32,14 +36,18 @@ Feature: step
       * > run steps
       * the exit code is 1
       * the output is exactly
-        | steps/SKILL.md:8 step.lines 3 > 2 |
-        | steps/SKILL.md:16 step.lines 3 > 2 |
+        | steps/SKILL.md:12 step.lines 3 > 2 |
+        | steps/SKILL.md:20 step.lines 3 > 2 |
 
   Rule: chars
 
     Scenario: a long step split over many lines fails
       * > touch long/SKILL.md
         """
+        ---
+        name: long
+        description: Fixture.
+        ---
         # Long
 
         ## a
@@ -75,7 +83,7 @@ Feature: step
       * > run long
       * the exit code is 1
       * the output is exactly
-        | long/SKILL.md:5 step 301 > 255 |
+        | long/SKILL.md:9 step 301 > 255 |
 
     Scenario: a link counts only its label
       * > touch .eli.yml
@@ -85,6 +93,10 @@ Feature: step
         """
       * > touch link/SKILL.md
         """
+        ---
+        name: link
+        description: Fixture.
+        ---
         # Link
 
         ## a
@@ -94,7 +106,7 @@ Feature: step
       * > run link
       * the exit code is 1
       * the output is exactly
-        | link/SKILL.md:5 step 301 > 255 |
+        | link/SKILL.md:9 step 301 > 255 |
 
     Scenario: the top-level step key sets the limit
       * > touch .eli.yml
@@ -103,6 +115,10 @@ Feature: step
         """
       * > touch long/SKILL.md
         """
+        ---
+        name: long
+        description: Fixture.
+        ---
         # Long
 
         ## a
@@ -138,7 +154,7 @@ Feature: step
       * > run long
       * the exit code is 1
       * the output is exactly
-        | long/SKILL.md:5 step 301 > 300 |
+        | long/SKILL.md:9 step 301 > 300 |
 
     Scenario: a hard line break counts as one space
       * > touch .eli.yml
@@ -147,6 +163,10 @@ Feature: step
         """
       * > touch break/SKILL.md
         """
+        ---
+        name: break
+        description: Fixture.
+        ---
         # Break
 
         ## a
@@ -160,8 +180,8 @@ Feature: step
       * > run break
       * the exit code is 1
       * the output is exactly
-        | break/SKILL.md:5 step 3 > 2 |
-        | break/SKILL.md:8 step 3 > 2 |
+        | break/SKILL.md:9 step 3 > 2 |
+        | break/SKILL.md:12 step 3 > 2 |
 
     Scenario: inline code chars count toward the step
       * > touch .eli.yml
@@ -170,6 +190,10 @@ Feature: step
         """
       * > touch code/SKILL.md
         """
+        ---
+        name: code
+        description: Fixture.
+        ---
         # Code
 
         ## a
@@ -179,13 +203,17 @@ Feature: step
       * > run code
       * the exit code is 1
       * the output is exactly
-        | code/SKILL.md:5 step 30 > 25 |
+        | code/SKILL.md:9 step 30 > 25 |
 
   Rule: bullet
 
     Scenario: a numbered step fails the default bullet
       * > touch numbered/SKILL.md
         """
+        ---
+        name: numbered
+        description: Fixture.
+        ---
         # Numbered
 
         ## a
@@ -196,12 +224,16 @@ Feature: step
       * > run numbered
       * the exit code is 1
       * the output is exactly
-        | numbered/SKILL.md:5 bullet 1. > - |
-        | numbered/SKILL.md:6 bullet 2. > - |
+        | numbered/SKILL.md:9 bullet 1. > - |
+        | numbered/SKILL.md:10 bullet 2. > - |
 
     Scenario: a star step fails the default bullet
       * > touch star/SKILL.md
         """
+        ---
+        name: star
+        description: Fixture.
+        ---
         # Star
 
         ## a
@@ -211,11 +243,15 @@ Feature: step
       * > run star
       * the exit code is 1
       * the output is exactly
-        | star/SKILL.md:5 bullet * > - |
+        | star/SKILL.md:9 bullet * > - |
 
     Scenario: a plus step fails the default bullet
       * > touch plus/SKILL.md
         """
+        ---
+        name: plus
+        description: Fixture.
+        ---
         # Plus
 
         ## a
@@ -225,7 +261,7 @@ Feature: step
       * > run plus
       * the exit code is 1
       * the output is exactly
-        | plus/SKILL.md:5 bullet + > - |
+        | plus/SKILL.md:9 bullet + > - |
 
     Scenario: the top-level bullet key sets the marker
       * > touch .eli.yml
@@ -234,6 +270,10 @@ Feature: step
         """
       * > touch dash/SKILL.md
         """
+        ---
+        name: dash
+        description: Fixture.
+        ---
         # Dash
 
         ## a
@@ -244,4 +284,4 @@ Feature: step
       * > run dash
       * the exit code is 1
       * the output is exactly
-        | dash/SKILL.md:6 bullet - > * |
+        | dash/SKILL.md:10 bullet - > * |

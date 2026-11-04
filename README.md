@@ -70,6 +70,8 @@ Output is `<path>:<line> <id> <actual> > <max>`. A warning has `warn ` before th
 wide/SKILL.md:9 warn section.width 71 > 70
 ```
 
+Frontmatter is checked on every file. `name` is required, max 64 characters. `description` is required, max 1024 characters. A missing field is an error, as `<path>:1 name missing`. Config cannot set or turn these off.
+
 Exit codes:
 
 - `0`: no errors, warnings only or clean

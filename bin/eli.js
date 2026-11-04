@@ -4,6 +4,7 @@ import { homedir } from "node:os";
 import { relative } from "node:path";
 import { configure, invalid, load, unknown } from "../lib/config.js";
 import { kind } from "../lib/elements.js";
+import { blank, frontmatter } from "../lib/frontmatter.js";
 import { targets } from "../lib/targets.js";
 import { shaped } from "../lib/values.js";
 
@@ -22,11 +23,18 @@ const fire =
       .check(text, options, values)
       .map((hit) => ({ id: rule.id, severity, ...hit }));
 
+const scan = (values, file, text) => [
+  ...configure(values, kind(file)).flatMap(fire(blank(text), values)),
+  ...frontmatter(text),
+];
+
 const lint = (values) => (file) =>
-  configure(values, kind(file))
-    .flatMap(fire(fs.readFileSync(file, "utf8"), values))
+  scan(values, file, fs.readFileSync(file, "utf8"))
     .filter((hit) => hit.severity !== "off")
     .map((hit) => ({ ...hit, path: relative(cwd, file) }));
+
+const detail = ({ actual, max }) =>
+  [actual, max].filter((part) => part !== undefined).join(" > ");
 
 const found = bad.length ? [] : targets(names).flatMap(lint(shaped(settings)));
 
@@ -43,7 +51,7 @@ gone.forEach(({ path, id }) =>
 found.forEach((hit) =>
   console.log(
     `${hit.path}:${hit.line} ${label[hit.severity]}${hit.id}`,
-    `${hit.actual} > ${hit.max}`,
+    detail(hit),
   ),
 );
 

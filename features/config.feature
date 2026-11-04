@@ -9,6 +9,10 @@ Feature: Config
       """
     * > touch wide/SKILL.md
       """
+      ---
+      name: wide
+      description: Fixture.
+      ---
       # Wide
 
       ## a
@@ -37,6 +41,10 @@ Feature: Config
       """
     * > touch short/SKILL.md
       """
+      ---
+      name: short
+      description: Fixture.
+      ---
       # Short
       """
     * > eli --config flag.yml short
@@ -66,6 +74,10 @@ Feature: Config
       """
     * > touch proj/mix/SKILL.md
       """
+      ---
+      name: mix
+      description: Fixture.
+      ---
       # Mix
 
       Lorem ipsum dolor sit amet, consectetur adipiscing.
@@ -79,9 +91,9 @@ Feature: Config
     * > cd proj
     * > run --config ../flag.yml mix
     * the output is exactly
-      | mix/SKILL.md:9 skill.lines 9 > 2 |
-      | mix/SKILL.md:9 skill.sections 3 > 2 |
-      | mix/SKILL.md:3 skill.width 51 > 30 |
+      | mix/SKILL.md:13 skill.lines 13 > 2 |
+      | mix/SKILL.md:13 skill.sections 3 > 2 |
+      | mix/SKILL.md:7 skill.width 51 > 30 |
     * the exit code is 1
 
   Scenario: off reports nothing
@@ -92,6 +104,10 @@ Feature: Config
       """
     * > touch wide/SKILL.md
       """
+      ---
+      name: wide
+      description: Fixture.
+      ---
       # Wide
 
       Short.
@@ -129,6 +145,10 @@ Feature: Config
         """
       * > touch short/SKILL.md
         """
+        ---
+        name: short
+        description: Fixture.
+        ---
         # Short
         """
       * > run --config flag.yml --config .eli.yml short
@@ -151,6 +171,10 @@ Feature: Config
         """
       * > touch short/SKILL.md
         """
+        ---
+        name: short
+        description: Fixture.
+        ---
         # Short
         """
       * > run short
@@ -164,6 +188,10 @@ Feature: Config
       * > sample .eli.yml from the README
       * > touch short/SKILL.md
         """
+        ---
+        name: short
+        description: Fixture.
+        ---
         # Short
         """
       * > run short

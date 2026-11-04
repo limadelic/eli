@@ -10,12 +10,20 @@ Feature: agent
         """
       * > touch mix/SKILL.md
         """
+        ---
+        name: mix
+        description: Fixture.
+        ---
         # Mix
 
         abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijk
         """
       * > touch mix/agents/x.md
         """
+        ---
+        name: x
+        description: Fixture.
+        ---
         # X
 
         abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghij
@@ -28,7 +36,7 @@ Feature: agent
       * > run mix
       * the exit code is 1
       * the output is exactly
-        | mix/agents/x.md:4 agent.width 61 > 60 |
+        | mix/agents/x.md:8 agent.width 61 > 60 |
 
   Rule: lines
 
@@ -36,10 +44,14 @@ Feature: agent
       * > touch .eli.yml
         """
         agent:
-          lines: 4
+          lines: 8
         """
       * > touch lines/agents/at.md
         """
+        ---
+        name: at
+        description: Fixture.
+        ---
         Ok.
         Ok.
         Ok.
@@ -47,6 +59,10 @@ Feature: agent
         """
       * > touch lines/agents/over.md
         """
+        ---
+        name: over
+        description: Fixture.
+        ---
         Ok.
         Ok.
         Ok.
@@ -56,7 +72,7 @@ Feature: agent
       * > run lines
       * the exit code is 1
       * the output is exactly
-        | lines/agents/over.md:5 agent.lines 5 > 4 |
+        | lines/agents/over.md:9 agent.lines 9 > 8 |
 
   Rule: sections
 
@@ -68,12 +84,20 @@ Feature: agent
         """
       * > touch sections/agents/at.md
         """
+        ---
+        name: at
+        description: Fixture.
+        ---
         ## a
 
         ## b
         """
       * > touch sections/agents/over.md
         """
+        ---
+        name: over
+        description: Fixture.
+        ---
         ## a
 
         ## b
@@ -83,7 +107,7 @@ Feature: agent
       * > run sections
       * the exit code is 1
       * the output is exactly
-        | sections/agents/over.md:5 agent.sections 3 > 2 |
+        | sections/agents/over.md:9 agent.sections 3 > 2 |
 
   Rule: steps
 
@@ -98,6 +122,10 @@ Feature: agent
         """
       * > touch steps/agents/five.md
         """
+        ---
+        name: five
+        description: Fixture.
+        ---
         ## a
 
         - one
@@ -108,6 +136,10 @@ Feature: agent
         """
       * > touch steps/agents/six.md
         """
+        ---
+        name: six
+        description: Fixture.
+        ---
         ## a
 
         - one
@@ -119,6 +151,10 @@ Feature: agent
         """
       * > touch steps/SKILL.md
         """
+        ---
+        name: steps
+        description: Fixture.
+        ---
         # Steps
 
         ## a
@@ -130,5 +166,5 @@ Feature: agent
       * > run steps
       * the exit code is 1
       * the output is exactly
-        | steps/SKILL.md:7 section.steps 3 > 2 |
-        | steps/agents/six.md:8 agent.section.steps 6 > 5 |
+        | steps/SKILL.md:11 section.steps 3 > 2 |
+        | steps/agents/six.md:12 agent.section.steps 6 > 5 |
