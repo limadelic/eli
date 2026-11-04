@@ -139,3 +139,44 @@ Feature: step
       * the exit code is 1
       * the output is exactly
         | long/SKILL.md:5 step 301 > 300 |
+
+    Scenario: a hard line break counts as one space
+      * > touch .eli.yml
+        """
+        step: 2
+        """
+      * > touch break/SKILL.md
+        """
+        # Break
+
+        ## a
+
+        x  
+        y
+
+        z\
+        w
+        """
+      * > run break
+      * the exit code is 1
+      * the output is exactly
+        | break/SKILL.md:5 step 3 > 2 |
+        | break/SKILL.md:8 step 3 > 2 |
+
+    Scenario: inline code chars count toward the step
+      * > touch .eli.yml
+        """
+        step: 25
+        """
+      * > touch code/SKILL.md
+        """
+        # Code
+
+        ## a
+
+        Use `aaaaaaaaaaaaaaaaaaaa` here.
+        """
+      * > run code
+      * the exit code is 1
+      * the output is exactly
+        | code/SKILL.md:5 step 30 > 25 |
