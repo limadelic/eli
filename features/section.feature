@@ -141,6 +141,7 @@ Feature: section
         """
       * > eli wide
         | wide/SKILL.md:17 sections 8 > 7 |
+      * the exit code is 1
 
     Scenario: the top-level sections key sets the limit
       * > touch .eli.yml
