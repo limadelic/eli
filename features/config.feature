@@ -144,6 +144,20 @@ Feature: Config
         | .eli.yml agent: invalid value 5 |
       * the exit code is 2
 
+    Scenario: a bullet that is not a marker is reported and exit 2
+      * > touch .eli.yml
+        """
+        bullet: "1."
+        """
+      * > touch short/SKILL.md
+        """
+        # Short
+        """
+      * > run short
+      * the output is exactly
+        | .eli.yml bullet: invalid value "1." |
+      * the exit code is 2
+
   Rule: readme sample
 
     Scenario: the README config sample loads clean
