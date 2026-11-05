@@ -136,6 +136,24 @@ Feature: Config
         | .eli.yml bullet: invalid value "1." |
       * the exit code is 2
 
+    Scenario: a bullet pair with a non-marker is reported and exit 2
+      * > touch .eli.yml
+        """
+        bullet: [warn, "x"]
+        """
+      * > touch short/SKILL.md
+        """
+        ---
+        name: short
+        description: Fixture.
+        ---
+        # Short
+        """
+      * > run short
+      * the output is exactly
+        | .eli.yml bullet: invalid value ["warn","x"] |
+      * the exit code is 2
+
   Rule: unknown key
 
     Scenario: an old key exits 2
