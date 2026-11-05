@@ -17,8 +17,8 @@ const gone = unknown(argv, cwd, home);
 
 const fire =
   (text) =>
-  ({ id, check, level: [severity, max] }) =>
-    check(text, max).map((hit) => ({ id, severity, ...hit }));
+  ({ id, check, max }) =>
+    check(text, max).map((hit) => ({ id, ...hit }));
 
 const scan = (text) => [
   ...active.flatMap(fire(blank(text))),
@@ -36,8 +36,6 @@ const detail = ({ actual, max }) =>
 
 const found = bad.length ? [] : targets(names).flatMap(lint);
 
-const label = { warn: "warn ", error: "" };
-
 bad.forEach(({ path, id, value }) =>
   console.log(
     `${relative(cwd, path)} ${id}: invalid value ${JSON.stringify(value)}`,
@@ -47,15 +45,12 @@ gone.forEach(({ path, id }) =>
   console.log(`${relative(cwd, path)} unknown rule ${id}`),
 );
 found.forEach((hit) =>
-  console.log(
-    `${hit.path}:${hit.line} ${label[hit.severity]}${hit.id}`,
-    detail(hit),
-  ),
+  console.log(`${hit.path}:${hit.line} ${hit.id}`, detail(hit)),
 );
 
 process.exitCode = Math.max(
   0,
   ...bad.map(() => 2),
   ...gone.map(() => 2),
-  ...found.filter((hit) => hit.severity === "error").map(() => 1),
+  ...found.map(() => 1),
 );

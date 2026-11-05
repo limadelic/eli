@@ -28,26 +28,21 @@ bullet: "-"
 | `step`     | characters in one top-level item, a link counts its label only | 255     |
 | `bullet`   | the list marker, `-`, `*` or `+`                               | `"-"`   |
 
-Each key takes:
-
-- `N`: error at N
-- `[warn, N]`: warning at N
-
-For `bullet`, N is the marker: `"-"`, `"*"` or `"+"`. For example, `bullet: [warn, "*"]` allows `*` and warns on any other marker. Any other value is invalid.
+Each numeric key takes a number N. A count over N is a finding at N. `bullet` takes one marker, `"-"`, `"*"` or `"+"`, and a bullet with another marker is a finding. Any other value is invalid.
 
 Lookup: the first value set wins per key. The order is `--config <file>`, then each `.eli.yml` from the current dir up to the root, nearest first, then `~/.claude/skills/.eli.yml`, then the defaults.
 
-Output is `<path>:<line> <id> <actual> > <max>`. A warning has `warn ` before the id:
+Output is `<path>:<line> <id> <actual> > <max>`:
 
 ```
 wide/SKILL.md:21 sections 8 > 7
-wide/SKILL.md:13 warn steps 8 > 7
+wide/SKILL.md:13 steps 8 > 7
 ```
 
-Frontmatter is checked on every file. `name` is required, max 64 characters. `description` is required, max 1024 characters. A missing field is an error, as `<path>:1 name missing`. Config cannot set or turn these off.
+Frontmatter is checked on every file. `name` is required, max 64 characters. `description` is required, max 1024 characters. A missing field is a finding, as `<path>:1 name missing`. Config cannot set or turn these off.
 
 Exit codes:
 
-- `0`: no errors, warnings only or clean
-- `1`: at least one error
-- `2`: an unknown key (for example `width` or `skill`) or an invalid value. With an invalid value, eli checks no files.
+- `0`: clean
+- `1`: a finding
+- `2`: an unknown key (for example `width` or `skill`) or an invalid value (for example `[warn, 2]`). With an invalid value, eli checks no files.

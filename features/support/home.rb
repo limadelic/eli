@@ -4,8 +4,7 @@ require 'open3'
 
 module Home
   def run(args)
-    output, @status = Open3.capture2e({ 'HOME' => home }, "eli #{args}", chdir: workdir)
-    output
+    Open3.capture2e({ 'HOME' => home }, "eli #{args}", chdir: workdir).first
   end
 
   def home

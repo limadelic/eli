@@ -111,31 +111,3 @@ Feature: step
         """
         dash/SKILL.md:7 bullet - > *
         """
-
-  Rule: warn
-
-    Scenario Outline: a warn value warns
-      * > touch .eli.yml
-        """
-        <config>
-        """
-      * > touch warn/SKILL.md
-        """
-        ---
-        name: warn
-        description: Fixture.
-        ---
-        ## a
-        One two three.
-
-        - one
-        """
-      * > eli warn
-        """
-        <output>
-        """
-
-      Examples:
-        | config              | output                             |
-        | step: [warn, 5]     | warn/SKILL.md:6 warn step 14 > 5   |
-        | bullet: [warn, "*"] | warn/SKILL.md:8 warn bullet - > *  |

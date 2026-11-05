@@ -25,7 +25,6 @@ Feature: section
       Examples:
         | config    | output                              |
         | 2         | many/SKILL.md:7 sections 3 > 2      |
-        | [warn, 2] | many/SKILL.md:7 warn sections 3 > 2 |
 
   Rule: steps
 
@@ -55,7 +54,6 @@ Feature: section
       Examples:
         | config    | output                             |
         | 2         | few/SKILL.md:10 steps 3 > 2        |
-        | [warn, 2] | few/SKILL.md:10 warn steps 3 > 2   |
 
     Scenario: the top-level steps count bullets, paragraphs, tables and code
       * > touch .eli.yml

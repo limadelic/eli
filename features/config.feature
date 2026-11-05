@@ -74,11 +74,12 @@ Feature: Config
         """
 
       Examples:
-        | config              | output                                     |
+        | config              | output                                      |
         | bullet: "1."        | .eli.yml bullet: invalid value "1."        |
         | bullet: [warn, "x"] | .eli.yml bullet: invalid value ["warn","x"] |
         | bullet: 5           | .eli.yml bullet: invalid value 5           |
         | sections: off       | .eli.yml sections: invalid value "off"     |
+        | sections: [warn, 2] | .eli.yml sections: invalid value ["warn",2] |
 
   Rule: unknown key
 
