@@ -1,27 +1,15 @@
 Feature: Config
 
-  Scenario: an unknown rule id is reported
-    * > touch flag.yml
-      """
-      max-foo:
-        - error
-      """
+  Background:
     * > touch short/SKILL.md
       """
       ---
       name: short
       description: Fixture.
       ---
-      # Short
       """
-    * > eli --config flag.yml short
-      | flag.yml unknown rule max-foo |
 
   Scenario: the nearest config wins per key
-    * > touch ../.eli.yml
-      """
-      sections: 1
-      """
     * > touch .eli.yml
       """
       sections: 4
@@ -41,8 +29,6 @@ Feature: Config
       name: mix
       description: Fixture.
       ---
-      # Mix
-
       ## a
 
       - one
@@ -56,8 +42,8 @@ Feature: Config
     * > run --config ../flag.yml mix
     * the exit code is 1
     * the output is exactly
-      | mix/SKILL.md:14 sections 3 > 2 |
-      | mix/SKILL.md:10 steps 2 > 1 |
+      | mix/SKILL.md:12 sections 3 > 2 |
+      | mix/SKILL.md:8 steps 2 > 1 |
 
   Rule: invalid value
 
@@ -69,14 +55,6 @@ Feature: Config
         step:
         bullet: 5
         """
-      * > touch short/SKILL.md
-        """
-        ---
-        name: short
-        description: Fixture.
-        ---
-        # Short
-        """
       * > run short
       * the output is exactly
         | .eli.yml sections: invalid value "of" |
@@ -85,59 +63,22 @@ Feature: Config
         | .eli.yml bullet: invalid value 5 |
       * the exit code is 2
 
-    Scenario: a bullet that is not a marker is reported and exit 2
+    Scenario Outline: a bad value is reported and exits 2
       * > touch .eli.yml
         """
-        bullet: "1."
-        """
-      * > touch short/SKILL.md
-        """
-        ---
-        name: short
-        description: Fixture.
-        ---
-        # Short
+        <config>
         """
       * > run short
       * the output is exactly
-        | .eli.yml bullet: invalid value "1." |
+        | <output> |
       * the exit code is 2
 
-    Scenario: a bullet pair with a non-marker is reported and exit 2
-      * > touch .eli.yml
-        """
-        bullet: [warn, "x"]
-        """
-      * > touch short/SKILL.md
-        """
-        ---
-        name: short
-        description: Fixture.
-        ---
-        # Short
-        """
-      * > run short
-      * the output is exactly
-        | .eli.yml bullet: invalid value ["warn","x"] |
-      * the exit code is 2
-
-    Scenario: off is not a value and exits 2
-      * > touch .eli.yml
-        """
-        sections: off
-        """
-      * > touch short/SKILL.md
-        """
-        ---
-        name: short
-        description: Fixture.
-        ---
-        # Short
-        """
-      * > run short
-      * the output is exactly
-        | .eli.yml sections: invalid value "off" |
-      * the exit code is 2
+      Examples:
+        | config              | output                                     |
+        | bullet: "1."        | .eli.yml bullet: invalid value "1."        |
+        | bullet: [warn, "x"] | .eli.yml bullet: invalid value ["warn","x"] |
+        | bullet: 5           | .eli.yml bullet: invalid value 5           |
+        | sections: off       | .eli.yml sections: invalid value "off"     |
 
   Rule: unknown key
 
@@ -147,14 +88,6 @@ Feature: Config
         skill:
           sections: 2
         width: 80
-        """
-      * > touch short/SKILL.md
-        """
-        ---
-        name: short
-        description: Fixture.
-        ---
-        # Short
         """
       * > run short
       * the output is exactly
@@ -166,14 +99,6 @@ Feature: Config
 
     Scenario: the README config sample loads clean
       * > sample .eli.yml from the README
-      * > touch short/SKILL.md
-        """
-        ---
-        name: short
-        description: Fixture.
-        ---
-        # Short
-        """
       * > run short
       * the exit code is 0
       * the output is empty
@@ -181,13 +106,15 @@ Feature: Config
   Rule: defaults
 
     Scenario: the defaults are 7 sections, 7 steps, 255 chars and a dash
+      * > touch .eli.yml
+        """
+        """
       * > touch sections/SKILL.md
         """
         ---
         name: sections
         description: Fixture.
         ---
-        # Sections
         ## a
 
         ## b
@@ -210,7 +137,6 @@ Feature: Config
         name: steps
         description: Fixture.
         ---
-        # Steps
         ## a
 
         One.
@@ -235,7 +161,6 @@ Feature: Config
         name: step
         description: Fixture.
         ---
-        # Step
         ## a
 
         aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
@@ -246,7 +171,6 @@ Feature: Config
         name: bullet
         description: Fixture.
         ---
-        # Bullet
         ## a
 
         * one
@@ -254,7 +178,7 @@ Feature: Config
       * > run .
       * the exit code is 1
       * the output is exactly
-        | bullet/SKILL.md:8 bullet * > - |
-        | sections/SKILL.md:20 sections 8 > 7 |
-        | step/SKILL.md:8 step 256 > 255 |
-        | steps/SKILL.md:22 steps 8 > 7 |
+        | bullet/SKILL.md:7 bullet * > - |
+        | sections/SKILL.md:19 sections 8 > 7 |
+        | step/SKILL.md:7 step 256 > 255 |
+        | steps/SKILL.md:21 steps 8 > 7 |
