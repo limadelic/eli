@@ -2,10 +2,10 @@ Feature: step
 
   Rule: chars
 
-    Scenario: a long step split over many lines fails
+    Scenario: a long step split over 2 lines fails
       * > touch .eli.yml
         """
-        step: 40
+        step: 20
         """
       * > touch long/SKILL.md
         """
@@ -18,16 +18,14 @@ Feature: step
         ## a
 
         aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
         bbbbbbbbbbbbbbb
         """
       * > run long
       * the exit code is 1
       * the output is exactly
-        | long/SKILL.md:9 step 48 > 40 |
+        | long/SKILL.md:9 step 26 > 20 |
 
-    Scenario: a link counts only its label
+    Scenario: a link counts only its label and inline code counts its text
       * > touch .eli.yml
         """
         step: 30
@@ -42,82 +40,12 @@ Feature: step
 
         ## a
 
-        [aaaaaaaaaa aaaaaaaaaa bbbbbbbbbbbbbbb](https://example.com/a/very/long/address/that/must/not/count/at/all/so/it/is/long/enough/to/matter)
+        See [aaaaaaaaaa](https://example.com/a/very/long/address/that/must/not/count/at/all) and `bbbbbbbbbbbbbbb`.
         """
       * > run link
       * the exit code is 1
       * the output is exactly
-        | link/SKILL.md:9 step 37 > 30 |
-
-    Scenario: the top-level step key sets the limit
-      * > touch .eli.yml
-        """
-        step: 300
-        """
-      * > touch long/SKILL.md
-        """
-        ---
-        name: long
-        description: Fixture.
-        ---
-        # Long
-
-        ## a
-
-        aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
-        bbbbbbbbbbbbbbb
-        """
-      * > run long
-      * the exit code is 1
-      * the output is exactly
-        | long/SKILL.md:9 step 301 > 300 |
-
-    Scenario: a warn step value warns and exits 0
-      * > touch .eli.yml
-        """
-        step: [warn, 5]
-        """
-      * > touch short/SKILL.md
-        """
-        ---
-        name: short
-        description: Fixture.
-        ---
-        # Short
-
-        ## a
-
-        One two three.
-        """
-      * > run short
-      * the exit code is 0
-      * the output is exactly
-        | short/SKILL.md:9 warn step 14 > 5 |
+        | link/SKILL.md:9 step 35 > 30 |
 
     Scenario: a hard line break counts as one space
       * > touch .eli.yml
@@ -146,99 +74,37 @@ Feature: step
         | break/SKILL.md:9 step 3 > 2 |
         | break/SKILL.md:12 step 3 > 2 |
 
-    Scenario: inline code chars count toward the step
-      * > touch .eli.yml
-        """
-        step: 25
-        """
-      * > touch code/SKILL.md
-        """
-        ---
-        name: code
-        description: Fixture.
-        ---
-        # Code
-
-        ## a
-
-        Use `aaaaaaaaaaaaaaaaaaaa` here.
-        """
-      * > run code
-      * the exit code is 1
-      * the output is exactly
-        | code/SKILL.md:9 step 30 > 25 |
-
   Rule: bullet
 
-    Scenario: a numbered step fails the bullet marker
+    Scenario Outline: a step with the wrong marker fails the bullet
       * > touch .eli.yml
         """
-        bullet: "+"
+        bullet: "<bullet>"
         """
-      * > touch numbered/SKILL.md
+      * > touch marker/SKILL.md
         """
         ---
-        name: numbered
+        name: marker
         description: Fixture.
         ---
-        # Numbered
+        # Marker
 
         ## a
 
-        1. one
-        2. two
+        <marker> one
         """
-      * > run numbered
+      * > run marker
       * the exit code is 1
       * the output is exactly
-        | numbered/SKILL.md:9 bullet 1. > + |
-        | numbered/SKILL.md:10 bullet 2. > + |
+        | marker/SKILL.md:9 bullet <marker> > <bullet> |
 
-    Scenario: a star step fails the bullet marker
-      * > touch .eli.yml
-        """
-        bullet: "+"
-        """
-      * > touch star/SKILL.md
-        """
-        ---
-        name: star
-        description: Fixture.
-        ---
-        # Star
+      Examples:
+        | marker | bullet |
+        | 1.     | +      |
+        | *      | +      |
+        | +      | *      |
 
-        ## a
-
-        * one
-        """
-      * > run star
-      * the exit code is 1
-      * the output is exactly
-        | star/SKILL.md:9 bullet * > + |
-
-    Scenario: a plus step fails the bullet marker
-      * > touch .eli.yml
-        """
-        bullet: "*"
-        """
-      * > touch plus/SKILL.md
-        """
-        ---
-        name: plus
-        description: Fixture.
-        ---
-        # Plus
-
-        ## a
-
-        + one
-        """
-      * > run plus
-      * the exit code is 1
-      * the output is exactly
-        | plus/SKILL.md:9 bullet + > * |
-
-    Scenario: the top-level bullet key sets the marker
+    Scenario: a mixed list does not report the item that matches the marker
       * > touch .eli.yml
         """
         bullet: "*"
@@ -261,26 +127,33 @@ Feature: step
       * the output is exactly
         | dash/SKILL.md:10 bullet - > * |
 
-    Scenario: a warn bullet value warns and exits 0
+  Rule: warn
+
+    Scenario Outline: a warn value warns and exits 0
       * > touch .eli.yml
         """
-        bullet: [warn, "*"]
+        <config>
         """
-      * > touch dash/SKILL.md
+      * > touch warn/SKILL.md
         """
         ---
-        name: dash
+        name: warn
         description: Fixture.
         ---
-        # Dash
+        # Warn
 
         ## a
 
+        One two three.
+
         - one
-        - two
         """
-      * > run dash
+      * > run warn
       * the exit code is 0
       * the output is exactly
-        | dash/SKILL.md:9 warn bullet - > * |
-        | dash/SKILL.md:10 warn bullet - > * |
+        | <output> |
+
+      Examples:
+        | config              | output                             |
+        | step: [warn, 5]     | warn/SKILL.md:9 warn step 14 > 5   |
+        | bullet: [warn, "*"] | warn/SKILL.md:11 warn bullet - > * |
