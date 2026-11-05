@@ -3,40 +3,38 @@ import fs from "node:fs";
 import { homedir } from "node:os";
 import { relative } from "node:path";
 import { configure, invalid, load, unknown } from "../lib/config.js";
-import { kind } from "../lib/elements.js";
 import { blank, frontmatter } from "../lib/frontmatter.js";
 import { targets } from "../lib/targets.js";
-import { shaped } from "../lib/values.js";
 
 const argv = process.argv.slice(2);
 const cwd = process.cwd();
 const names = argv.filter((arg, i) => ![arg, argv[i - 1]].includes("--config"));
 const home = fs.realpathSync(homedir());
 const settings = load(argv, cwd, home);
+const active = configure(settings);
 const bad = invalid(argv, cwd, home);
 const gone = unknown(argv, cwd, home);
 
 const fire =
-  (text, values) =>
-  ({ rule, severity, options }) =>
-    rule
-      .check(text, options, values)
-      .map((hit) => ({ id: rule.id, severity, ...hit }));
+  (text) =>
+  ({ id, check, level: [severity, max] }) =>
+    check(text, max).map((hit) => ({ id, severity, ...hit }));
 
-const scan = (values, file, text) => [
-  ...configure(values, kind(file)).flatMap(fire(blank(text), values)),
+const scan = (text) => [
+  ...active.flatMap(fire(blank(text))),
   ...frontmatter(text),
 ];
 
-const lint = (values) => (file) =>
-  scan(values, file, fs.readFileSync(file, "utf8"))
-    .filter((hit) => hit.severity !== "off")
-    .map((hit) => ({ ...hit, path: relative(cwd, file) }));
+const lint = (file) =>
+  scan(fs.readFileSync(file, "utf8")).map((hit) => ({
+    ...hit,
+    path: relative(cwd, file),
+  }));
 
 const detail = ({ actual, max }) =>
   [actual, max].filter((part) => part !== undefined).join(" > ");
 
-const found = bad.length ? [] : targets(names).flatMap(lint(shaped(settings)));
+const found = bad.length ? [] : targets(names).flatMap(lint);
 
 const label = { warn: "warn ", error: "" };
 

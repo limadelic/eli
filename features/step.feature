@@ -1,44 +1,5 @@
 Feature: step
 
-  Rule: lines
-
-    Scenario: a step over its lines fails
-      * > touch .eli.yml
-        """
-        step: {lines: 2}
-        """
-      * > touch steps/SKILL.md
-        """
-        ---
-        name: steps
-        description: Fixture.
-        ---
-        # Steps
-
-        ## a
-
-        - one
-          two
-
-        - one
-          two
-          three
-
-        - one
-          - two
-          - three
-
-        - one
-
-          two
-          three
-        """
-      * > run steps
-      * the exit code is 1
-      * the output is exactly
-        | steps/SKILL.md:12 step.lines 3 > 2 |
-        | steps/SKILL.md:20 step.lines 3 > 2 |
-
   Rule: chars
 
     Scenario: a long step split over many lines fails
@@ -86,11 +47,6 @@ Feature: step
         | long/SKILL.md:9 step 301 > 255 |
 
     Scenario: a link counts only its label
-      * > touch .eli.yml
-        """
-        skill:
-          width: off
-        """
       * > touch link/SKILL.md
         """
         ---

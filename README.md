@@ -12,62 +12,37 @@ The md linter for Claude skills and elita agents.
 
 eli lints the files you pass. A dir is searched recursively. `SKILL.md` is a skill. A `.md` file directly in an `agents` dir is an agent, for example `.claude/agents/x.md`. Other `.md` files are skipped.
 
-Config is a `.eli.yml` file in CSS-like shape. Elements are `skill`, `agent`, `section`, `step`, `code` and `link`. Props are `lines`, `width`, `sections` and `steps`. A nested selector targets one element inside another.
+Config is a `.eli.yml` file with four keys:
 
 ```yaml
-skill:
-  lines: 300
-  sections: 7
-  width: 80
-  section:
-    width: 100
-agent:
-  width: [warn, 60]
-section:
-  steps: 7
-step:
-  lines: 2
-code:
-  width: 120
-link:
-  width: 200
+sections: 7
+steps: 7
+step: 255
+bullet: "-"
 ```
 
-| Selector  | Prop       | Counts                                                                         | Default              |
-| --------- | ---------- | ------------------------------------------------------------------------------ | -------------------- |
-| `skill`   | `lines`    | lines in the file                                                              | 250                  |
-| `skill`   | `sections` | `##` sections                                                                  | 7                    |
-| `skill`   | `width`    | characters per prose line before the first section                             | 80                   |
-| `section` | `width`    | characters per prose line inside a section                                     | skill or agent width |
-| `section` | `steps`    | top-level list items in a section; pre-`##` text is one section                | 7                    |
-| `step`    | `lines`    | lines in one step (a top-level list item), without nested lists or blank lines | 2                    |
-| `code`    | `width`    | characters in fenced code lines                                                | off                  |
-| `link`    | `width`    | characters in a URL, not the link label                                        | off                  |
+| Key        | Counts                                                         | Default |
+| ---------- | -------------------------------------------------------------- | ------- |
+| `sections` | `##` sections in a file                                        | 7       |
+| `steps`    | top-level items in a section, bullets and paragraphs alike     | 7       |
+| `step`     | characters in one top-level item, a link counts its label only | 255     |
+| `bullet`   | the list marker, `-`, `*` or `+`                               | `"-"`   |
 
-`agent` takes the same props as `skill`. `skill` props do not apply to agents.
-
-`code` and `link` default to `off` and do not inherit the file width. `off` skips the check.
-
-`link` is an inline element. It measures the URL text only. Prose around a URL is measured against the width that applies to its line, with the URL taken out.
-
-Values:
+`sections`, `steps` and `step` take:
 
 - `N`: error at N
 - `[warn, N]`: warning at N
-- `[error, N]`: error at N
 - `off`: rule skipped
 
-Lookup:
+`bullet` takes one marker. Any other value is invalid.
 
-- A child's own value beats an inherited one. `off` is a value like any other. So `skill: {width: off}` with `code: {width: 80}` still checks code lines at 80.
-- A section line's width is the first one set of `skill.section.width`, `section.width`, `skill.width`, then the default (80).
-- For agents, `agent` replaces `skill` in those keys: `agent.section.width`, `section.width`, `agent.width`, then 80.
-- Per prop, the first source that sets it wins: `--config <file>`, then each `.eli.yml` from the current dir up to the root, nearest first, then `~/.claude/skills/.eli.yml`, then the defaults.
+Lookup: the first value set wins per key. The order is `--config <file>`, then each `.eli.yml` from the current dir up to the root, nearest first, then `~/.claude/skills/.eli.yml`, then the defaults.
 
 Output is `<path>:<line> <id> <actual> > <max>`. A warning has `warn ` before the id:
 
 ```
-wide/SKILL.md:9 warn section.width 71 > 70
+wide/SKILL.md:21 sections 8 > 7
+wide/SKILL.md:13 warn steps 8 > 7
 ```
 
 Frontmatter is checked on every file. `name` is required, max 64 characters. `description` is required, max 1024 characters. A missing field is an error, as `<path>:1 name missing`. Config cannot set or turn these off.
@@ -76,4 +51,4 @@ Exit codes:
 
 - `0`: no errors, warnings only or clean
 - `1`: at least one error
-- `2`: an unknown rule or an invalid value. With an invalid value, eli checks no files.
+- `2`: an unknown key (for example `width` or `skill`) or an invalid value. With an invalid value, eli checks no files.

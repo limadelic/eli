@@ -4,8 +4,6 @@ Feature: Config
     * > touch .eli.yml
       """
       sections: off
-      skill:
-        sections: off
       """
     * > touch wide/SKILL.md
       """
@@ -31,7 +29,9 @@ Feature: Config
 
       ## h
       """
-    * > eli wide
+    * > run wide
+    * the exit code is 0
+    * the output is empty
 
   Scenario: an unknown rule id is reported
     * > touch flag.yml
@@ -50,27 +50,23 @@ Feature: Config
     * > eli --config flag.yml short
       | flag.yml unknown rule max-foo |
 
-  Scenario: the nearest config wins per prop
+  Scenario: the nearest config wins per key
     * > touch ../.eli.yml
       """
+      sections: 1
       """
     * > touch .eli.yml
       """
-      skill:
-        lines: 2
-        sections: 1
-        width: 10
+      sections: 4
+      steps: 5
       """
     * > touch proj/.eli.yml
       """
-      skill:
-        sections: 2
-        width: 20
+      sections: 2
       """
     * > touch flag.yml
       """
-      skill:
-        width: 30
+      steps: 1
       """
     * > touch proj/mix/SKILL.md
       """
@@ -80,9 +76,10 @@ Feature: Config
       ---
       # Mix
 
-      Lorem ipsum dolor sit amet, consectetur adipiscing.
-
       ## a
+
+      - one
+      - two
 
       ## b
 
@@ -90,58 +87,20 @@ Feature: Config
       """
     * > cd proj
     * > run --config ../flag.yml mix
-    * the output is exactly
-      | mix/SKILL.md:13 skill.lines 13 > 2 |
-      | mix/SKILL.md:13 skill.sections 3 > 2 |
-      | mix/SKILL.md:7 skill.width 51 > 30 |
     * the exit code is 1
-
-  Scenario: off reports nothing
-    * > touch .eli.yml
-      """
-      skill:
-        width: off
-      """
-    * > touch wide/SKILL.md
-      """
-      ---
-      name: wide
-      description: Fixture.
-      ---
-      # Wide
-
-      Short.
-      Ok.
-      Fine.
-      Done.
-      abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabc
-      """
-    * > run wide
-    * the exit code is 0
-    * the output is empty
+    * the output is exactly
+      | mix/SKILL.md:14 sections 3 > 2 |
+      | mix/SKILL.md:10 steps 2 > 1 |
 
   Rule: invalid value
 
     Scenario: bad values are reported and exit 2
       * > touch .eli.yml
         """
-        section:
-          width: of
-          steps: [warn, x]
+        sections: of
+        steps: [warn, x]
         step:
-          lines:
-        skill:
-          lines: true
-          sections: [loud, 3]
-          section:
-            steps: [warn]
-            width: [warn, 3, 9]
-        agent: 5
-        """
-      * > touch flag.yml
-        """
-        skill:
-          width: wide
+        bullet: 5
         """
       * > touch short/SKILL.md
         """
@@ -151,17 +110,12 @@ Feature: Config
         ---
         # Short
         """
-      * > run --config flag.yml --config .eli.yml short
+      * > run short
       * the output is exactly
-        | flag.yml skill.width: invalid value "wide" |
-        | .eli.yml section.width: invalid value "of" |
-        | .eli.yml section.steps: invalid value ["warn","x"] |
-        | .eli.yml step.lines: invalid value null |
-        | .eli.yml skill.lines: invalid value true |
-        | .eli.yml skill.sections: invalid value ["loud",3] |
-        | .eli.yml skill.section.steps: invalid value ["warn"] |
-        | .eli.yml skill.section.width: invalid value ["warn",3,9] |
-        | .eli.yml agent: invalid value 5 |
+        | .eli.yml sections: invalid value "of" |
+        | .eli.yml steps: invalid value ["warn","x"] |
+        | .eli.yml step: invalid value null |
+        | .eli.yml bullet: invalid value 5 |
       * the exit code is 2
 
     Scenario: a bullet that is not a marker is reported and exit 2
@@ -180,6 +134,29 @@ Feature: Config
       * > run short
       * the output is exactly
         | .eli.yml bullet: invalid value "1." |
+      * the exit code is 2
+
+  Rule: unknown key
+
+    Scenario: an old key exits 2
+      * > touch .eli.yml
+        """
+        skill:
+          sections: 2
+        width: 80
+        """
+      * > touch short/SKILL.md
+        """
+        ---
+        name: short
+        description: Fixture.
+        ---
+        # Short
+        """
+      * > run short
+      * the output is exactly
+        | .eli.yml unknown rule skill |
+        | .eli.yml unknown rule width |
       * the exit code is 2
 
   Rule: readme sample
