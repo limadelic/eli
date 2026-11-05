@@ -1,38 +1,5 @@
 Feature: Config
 
-  Scenario: a rule set to off is skipped
-    * > touch .eli.yml
-      """
-      sections: off
-      """
-    * > touch wide/SKILL.md
-      """
-      ---
-      name: wide
-      description: Fixture.
-      ---
-      # Wide
-
-      ## a
-
-      ## b
-
-      ## c
-
-      ## d
-
-      ## e
-
-      ## f
-
-      ## g
-
-      ## h
-      """
-    * > run wide
-    * the exit code is 0
-    * the output is empty
-
   Scenario: an unknown rule id is reported
     * > touch flag.yml
       """
@@ -152,6 +119,24 @@ Feature: Config
       * > run short
       * the output is exactly
         | .eli.yml bullet: invalid value ["warn","x"] |
+      * the exit code is 2
+
+    Scenario: off is not a value and exits 2
+      * > touch .eli.yml
+        """
+        sections: off
+        """
+      * > touch short/SKILL.md
+        """
+        ---
+        name: short
+        description: Fixture.
+        ---
+        # Short
+        """
+      * > run short
+      * the output is exactly
+        | .eli.yml sections: invalid value "off" |
       * the exit code is 2
 
   Rule: unknown key

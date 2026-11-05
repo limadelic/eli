@@ -32,9 +32,8 @@ Each key takes:
 
 - `N`: error at N
 - `[warn, N]`: warning at N
-- `off`: rule skipped
 
-For `bullet`, N is the marker: `"-"`, `"*"` or `"+"`. For example, `bullet: [warn, "*"]` allows `*` and warns on any other marker, and `bullet: off` skips the rule. Any other value is invalid.
+For `bullet`, N is the marker: `"-"`, `"*"` or `"+"`. For example, `bullet: [warn, "*"]` allows `*` and warns on any other marker. Any other value is invalid.
 
 Lookup: the first value set wins per key. The order is `--config <file>`, then each `.eli.yml` from the current dir up to the root, nearest first, then `~/.claude/skills/.eli.yml`, then the defaults.
 

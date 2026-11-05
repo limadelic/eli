@@ -166,41 +166,6 @@ Feature: section
       * the output is exactly
         | few/SKILL.md:13 warn steps 3 > 2 |
 
-    Scenario: off steps reports nothing
-      * > touch .eli.yml
-        """
-        steps: off
-        """
-      * > touch many/SKILL.md
-        """
-        ---
-        name: many
-        description: Fixture.
-        ---
-        # Many
-
-        ## a
-
-        One.
-
-        Two.
-
-        Three.
-
-        Four.
-
-        Five.
-
-        Six.
-
-        Seven.
-
-        Eight.
-        """
-      * > run many
-      * the exit code is 0
-      * the output is empty
-
     Scenario: the top-level steps count bullets, paragraphs, tables and code
       * > touch .eli.yml
         """
