@@ -13,17 +13,14 @@ Feature: step
         name: long
         description: Fixture.
         ---
-        # Long
-
         ## a
-
         aaaaaaaaaa
         bbbbbbbbbbbbbbb
         """
       * > run long
       * the exit code is 1
       * the output is exactly
-        | long/SKILL.md:9 step 26 > 20 |
+        | long/SKILL.md:6 step 26 > 20 |
 
     Scenario: a link counts only its label and inline code counts its text
       * > touch .eli.yml
@@ -36,16 +33,13 @@ Feature: step
         name: link
         description: Fixture.
         ---
-        # Link
-
         ## a
-
         See [aaaaaaaaaa](https://example.com/a/very/long/address/that/must/not/count/at/all) and `bbbbbbbbbbbbbbb`.
         """
       * > run link
       * the exit code is 1
       * the output is exactly
-        | link/SKILL.md:9 step 35 > 30 |
+        | link/SKILL.md:6 step 35 > 30 |
 
     Scenario: a hard line break counts as one space
       * > touch .eli.yml
@@ -58,11 +52,8 @@ Feature: step
         name: break
         description: Fixture.
         ---
-        # Break
-
         ## a
-
-        x  
+        x
         y
 
         z\
@@ -71,8 +62,8 @@ Feature: step
       * > run break
       * the exit code is 1
       * the output is exactly
+        | break/SKILL.md:6 step 3 > 2 |
         | break/SKILL.md:9 step 3 > 2 |
-        | break/SKILL.md:12 step 3 > 2 |
 
   Rule: bullet
 
@@ -87,16 +78,13 @@ Feature: step
         name: marker
         description: Fixture.
         ---
-        # Marker
-
         ## a
-
         <marker> one
         """
       * > run marker
       * the exit code is 1
       * the output is exactly
-        | marker/SKILL.md:9 bullet <marker> > <bullet> |
+        | marker/SKILL.md:6 bullet <marker> > <bullet> |
 
       Examples:
         | marker | bullet |
@@ -115,17 +103,14 @@ Feature: step
         name: dash
         description: Fixture.
         ---
-        # Dash
-
         ## a
-
         * one
         - two
         """
       * > run dash
       * the exit code is 1
       * the output is exactly
-        | dash/SKILL.md:10 bullet - > * |
+        | dash/SKILL.md:7 bullet - > * |
 
   Rule: warn
 
@@ -140,10 +125,7 @@ Feature: step
         name: warn
         description: Fixture.
         ---
-        # Warn
-
         ## a
-
         One two three.
 
         - one
@@ -155,5 +137,5 @@ Feature: step
 
       Examples:
         | config              | output                             |
-        | step: [warn, 5]     | warn/SKILL.md:9 warn step 14 > 5   |
-        | bullet: [warn, "*"] | warn/SKILL.md:11 warn bullet - > * |
+        | step: [warn, 5]     | warn/SKILL.md:6 warn step 14 > 5   |
+        | bullet: [warn, "*"] | warn/SKILL.md:8 warn bullet - > *  |
