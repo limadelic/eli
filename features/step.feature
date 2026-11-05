@@ -3,6 +3,10 @@ Feature: step
   Rule: chars
 
     Scenario: a long step split over many lines fails
+      * > touch .eli.yml
+        """
+        step: 40
+        """
       * > touch long/SKILL.md
         """
         ---
@@ -16,37 +20,18 @@ Feature: step
         aaaaaaaaaa
         aaaaaaaaaa
         aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
-        aaaaaaaaaa
         bbbbbbbbbbbbbbb
         """
       * > run long
       * the exit code is 1
       * the output is exactly
-        | long/SKILL.md:9 step 301 > 255 |
+        | long/SKILL.md:9 step 48 > 40 |
 
     Scenario: a link counts only its label
+      * > touch .eli.yml
+        """
+        step: 30
+        """
       * > touch link/SKILL.md
         """
         ---
@@ -57,12 +42,12 @@ Feature: step
 
         ## a
 
-        [aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa bbbbbbbbbbbbbbb](https://example.com/a/very/long/address/that/must/not/count/at/all/so/it/is/long/enough/to/matter)
+        [aaaaaaaaaa aaaaaaaaaa bbbbbbbbbbbbbbb](https://example.com/a/very/long/address/that/must/not/count/at/all/so/it/is/long/enough/to/matter)
         """
       * > run link
       * the exit code is 1
       * the output is exactly
-        | link/SKILL.md:9 step 301 > 255 |
+        | link/SKILL.md:9 step 37 > 30 |
 
     Scenario: the top-level step key sets the limit
       * > touch .eli.yml
@@ -185,7 +170,11 @@ Feature: step
 
   Rule: bullet
 
-    Scenario: a numbered step fails the default bullet
+    Scenario: a numbered step fails the bullet marker
+      * > touch .eli.yml
+        """
+        bullet: "+"
+        """
       * > touch numbered/SKILL.md
         """
         ---
@@ -202,10 +191,14 @@ Feature: step
       * > run numbered
       * the exit code is 1
       * the output is exactly
-        | numbered/SKILL.md:9 bullet 1. > - |
-        | numbered/SKILL.md:10 bullet 2. > - |
+        | numbered/SKILL.md:9 bullet 1. > + |
+        | numbered/SKILL.md:10 bullet 2. > + |
 
-    Scenario: a star step fails the default bullet
+    Scenario: a star step fails the bullet marker
+      * > touch .eli.yml
+        """
+        bullet: "+"
+        """
       * > touch star/SKILL.md
         """
         ---
@@ -221,9 +214,13 @@ Feature: step
       * > run star
       * the exit code is 1
       * the output is exactly
-        | star/SKILL.md:9 bullet * > - |
+        | star/SKILL.md:9 bullet * > + |
 
-    Scenario: a plus step fails the default bullet
+    Scenario: a plus step fails the bullet marker
+      * > touch .eli.yml
+        """
+        bullet: "*"
+        """
       * > touch plus/SKILL.md
         """
         ---
@@ -239,7 +236,7 @@ Feature: step
       * > run plus
       * the exit code is 1
       * the output is exactly
-        | plus/SKILL.md:9 bullet + > - |
+        | plus/SKILL.md:9 bullet + > * |
 
     Scenario: the top-level bullet key sets the marker
       * > touch .eli.yml

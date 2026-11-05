@@ -177,3 +177,84 @@ Feature: Config
       * > run short
       * the exit code is 0
       * the output is empty
+
+  Rule: defaults
+
+    Scenario: the defaults are 7 sections, 7 steps, 255 chars and a dash
+      * > touch sections/SKILL.md
+        """
+        ---
+        name: sections
+        description: Fixture.
+        ---
+        # Sections
+        ## a
+
+        ## b
+
+        ## c
+
+        ## d
+
+        ## e
+
+        ## f
+
+        ## g
+
+        ## h
+        """
+      * > touch steps/SKILL.md
+        """
+        ---
+        name: steps
+        description: Fixture.
+        ---
+        # Steps
+        ## a
+
+        One.
+
+        Two.
+
+        Three.
+
+        Four.
+
+        Five.
+
+        Six.
+
+        Seven.
+
+        Eight.
+        """
+      * > touch step/SKILL.md
+        """
+        ---
+        name: step
+        description: Fixture.
+        ---
+        # Step
+        ## a
+
+        aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+        """
+      * > touch bullet/SKILL.md
+        """
+        ---
+        name: bullet
+        description: Fixture.
+        ---
+        # Bullet
+        ## a
+
+        * one
+        """
+      * > run .
+      * the exit code is 1
+      * the output is exactly
+        | bullet/SKILL.md:8 bullet * > - |
+        | sections/SKILL.md:20 sections 8 > 7 |
+        | step/SKILL.md:8 step 256 > 255 |
+        | steps/SKILL.md:22 steps 8 > 7 |

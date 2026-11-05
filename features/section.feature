@@ -3,6 +3,10 @@ Feature: section
   Rule: sections
 
     Scenario: a file over the top-level sections fails
+      * > touch .eli.yml
+        """
+        sections: 3
+        """
       * > touch wide/SKILL.md
         """
         ---
@@ -18,19 +22,11 @@ Feature: section
         ## c
 
         ## d
-
-        ## e
-
-        ## f
-
-        ## g
-
-        ## h
         """
       * > run wide
       * the exit code is 1
       * the output is exactly
-        | wide/SKILL.md:21 sections 8 > 7 |
+        | wide/SKILL.md:13 sections 4 > 3 |
 
     Scenario: the top-level sections key sets the limit
       * > touch .eli.yml
@@ -83,6 +79,10 @@ Feature: section
   Rule: steps
 
     Scenario: a section over the top-level steps fails
+      * > touch .eli.yml
+        """
+        steps: 3
+        """
       * > touch many/SKILL.md
         """
         ---
@@ -100,19 +100,11 @@ Feature: section
         Three.
 
         Four.
-
-        Five.
-
-        Six.
-
-        Seven.
-
-        Eight.
         """
       * > run many
       * the exit code is 1
       * the output is exactly
-        | many/SKILL.md:23 steps 8 > 7 |
+        | many/SKILL.md:15 steps 4 > 3 |
 
     Scenario: the top-level steps key sets the limit
       * > touch .eli.yml

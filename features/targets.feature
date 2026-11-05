@@ -3,6 +3,9 @@ Feature: Targets
   Rule: which files are linted
 
     Scenario: an agent file in an agents dir is linted
+      * > touch .eli.yml
+        """
+        """
       * > touch agents/x.md
         """
         ---
@@ -19,6 +22,9 @@ Feature: Targets
         | agents/x.md:1 name missing |
 
     Scenario: an other md file is skipped
+      * > touch .eli.yml
+        """
+        """
       * > touch notes/x.md
         """
         ---
@@ -34,6 +40,9 @@ Feature: Targets
       * the output is empty
 
     Scenario: an agent is linted and an other md file beside it is skipped
+      * > touch .eli.yml
+        """
+        """
       * > touch agents/x.md
         """
         ---
