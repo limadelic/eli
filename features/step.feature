@@ -53,7 +53,7 @@ Feature: step
         description: Fixture.
         ---
         ## a
-        x
+        x  
         y
 
         z\

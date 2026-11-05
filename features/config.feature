@@ -47,7 +47,7 @@ Feature: Config
 
   Rule: invalid value
 
-    Scenario: bad values are reported and exit 2
+    Scenario: bad values are reported
       * > touch .eli.yml
         """
         sections: of
@@ -63,7 +63,7 @@ Feature: Config
         .eli.yml bullet: invalid value 5
         """
 
-    Scenario Outline: a bad value is reported and exits 2
+    Scenario Outline: a bad value is reported
       * > touch .eli.yml
         """
         <config>
@@ -75,15 +75,15 @@ Feature: Config
 
       Examples:
         | config              | output                                      |
-        | bullet: "1."        | .eli.yml bullet: invalid value "1."        |
+        | bullet: "1."        | .eli.yml bullet: invalid value "1."         |
         | bullet: [warn, "x"] | .eli.yml bullet: invalid value ["warn","x"] |
-        | bullet: 5           | .eli.yml bullet: invalid value 5           |
-        | sections: off       | .eli.yml sections: invalid value "off"     |
+        | bullet: 5           | .eli.yml bullet: invalid value 5            |
+        | sections: off       | .eli.yml sections: invalid value "off"      |
         | sections: [warn, 2] | .eli.yml sections: invalid value ["warn",2] |
 
   Rule: unknown key
 
-    Scenario: an old key exits 2
+    Scenario: an old key is reported
       * > touch .eli.yml
         """
         skill:

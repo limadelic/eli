@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 When(/^> eli(?: (.+))?$/) do |args, *rest|
+  raise 'missing docstring' if rest.empty?
+
   expect_lines(rest.first, run(args))
 end
 
