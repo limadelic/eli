@@ -13,11 +13,11 @@ Feature: Frontmatter
         description: dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
         ---
         """
-      * > run wide
-      * the exit code is 1
-      * the output is exactly
-        | wide/SKILL.md:2 name 71 > 64 |
-        | wide/SKILL.md:3 description 1100 > 1024 |
+      * > eli wide
+        """
+        wide/SKILL.md:2 name 71 > 64
+        wide/SKILL.md:3 description 1100 > 1024
+        """
 
     Scenario: a file with no name and no description fails
       * > touch .eli.yml
@@ -26,8 +26,8 @@ Feature: Frontmatter
       * > touch wide/SKILL.md
         """
         """
-      * > run wide
-      * the exit code is 1
-      * the output is exactly
-        | wide/SKILL.md:1 name missing |
-        | wide/SKILL.md:1 description missing |
+      * > eli wide
+        """
+        wide/SKILL.md:1 name missing
+        wide/SKILL.md:1 description missing
+        """

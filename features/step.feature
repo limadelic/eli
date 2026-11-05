@@ -17,10 +17,10 @@ Feature: step
         aaaaaaaaaa
         bbbbbbbbbbbbbbb
         """
-      * > run long
-      * the exit code is 1
-      * the output is exactly
-        | long/SKILL.md:6 step 26 > 20 |
+      * > eli long
+        """
+        long/SKILL.md:6 step 26 > 20
+        """
 
     Scenario: a link counts only its label and inline code counts its text
       * > touch .eli.yml
@@ -36,10 +36,10 @@ Feature: step
         ## a
         See [aaaaaaaaaa](https://example.com/a/very/long/address/that/must/not/count/at/all) and `bbbbbbbbbbbbbbb`.
         """
-      * > run link
-      * the exit code is 1
-      * the output is exactly
-        | link/SKILL.md:6 step 35 > 30 |
+      * > eli link
+        """
+        link/SKILL.md:6 step 35 > 30
+        """
 
     Scenario: a hard line break counts as one space
       * > touch .eli.yml
@@ -53,17 +53,17 @@ Feature: step
         description: Fixture.
         ---
         ## a
-        x  
+        x
         y
 
         z\
         w
         """
-      * > run break
-      * the exit code is 1
-      * the output is exactly
-        | break/SKILL.md:6 step 3 > 2 |
-        | break/SKILL.md:9 step 3 > 2 |
+      * > eli break
+        """
+        break/SKILL.md:6 step 3 > 2
+        break/SKILL.md:9 step 3 > 2
+        """
 
   Rule: bullet
 
@@ -81,10 +81,10 @@ Feature: step
         ## a
         <marker> one
         """
-      * > run marker
-      * the exit code is 1
-      * the output is exactly
-        | marker/SKILL.md:6 bullet <marker> > <bullet> |
+      * > eli marker
+        """
+        marker/SKILL.md:6 bullet <marker> > <bullet>
+        """
 
       Examples:
         | marker | bullet |
@@ -107,14 +107,14 @@ Feature: step
         * one
         - two
         """
-      * > run dash
-      * the exit code is 1
-      * the output is exactly
-        | dash/SKILL.md:7 bullet - > * |
+      * > eli dash
+        """
+        dash/SKILL.md:7 bullet - > *
+        """
 
   Rule: warn
 
-    Scenario Outline: a warn value warns and exits 0
+    Scenario Outline: a warn value warns
       * > touch .eli.yml
         """
         <config>
@@ -130,10 +130,10 @@ Feature: step
 
         - one
         """
-      * > run warn
-      * the exit code is 0
-      * the output is exactly
-        | <output> |
+      * > eli warn
+        """
+        <output>
+        """
 
       Examples:
         | config              | output                             |

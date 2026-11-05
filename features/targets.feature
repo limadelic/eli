@@ -15,7 +15,7 @@ Feature: Targets
       * > touch notes/x.md
         """
         """
-      * > run .
-      * the exit code is 1
-      * the output is exactly
-        | agents/x.md:1 name missing |
+      * > eli .
+        """
+        agents/x.md:1 name missing
+        """

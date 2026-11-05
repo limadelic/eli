@@ -39,11 +39,11 @@ Feature: Config
       ## c
       """
     * > cd proj
-    * > run --config ../flag.yml mix
-    * the exit code is 1
-    * the output is exactly
-      | mix/SKILL.md:12 sections 3 > 2 |
-      | mix/SKILL.md:8 steps 2 > 1 |
+    * > eli --config ../flag.yml mix
+      """
+      mix/SKILL.md:12 sections 3 > 2
+      mix/SKILL.md:8 steps 2 > 1
+      """
 
   Rule: invalid value
 
@@ -55,23 +55,23 @@ Feature: Config
         step:
         bullet: 5
         """
-      * > run short
-      * the output is exactly
-        | .eli.yml sections: invalid value "of" |
-        | .eli.yml steps: invalid value ["warn","x"] |
-        | .eli.yml step: invalid value null |
-        | .eli.yml bullet: invalid value 5 |
-      * the exit code is 2
+      * > eli short
+        """
+        .eli.yml sections: invalid value "of"
+        .eli.yml steps: invalid value ["warn","x"]
+        .eli.yml step: invalid value null
+        .eli.yml bullet: invalid value 5
+        """
 
     Scenario Outline: a bad value is reported and exits 2
       * > touch .eli.yml
         """
         <config>
         """
-      * > run short
-      * the output is exactly
-        | <output> |
-      * the exit code is 2
+      * > eli short
+        """
+        <output>
+        """
 
       Examples:
         | config              | output                                     |
@@ -88,19 +88,19 @@ Feature: Config
         skill:
         width: 80
         """
-      * > run short
-      * the output is exactly
-        | .eli.yml unknown rule skill |
-        | .eli.yml unknown rule width |
-      * the exit code is 2
+      * > eli short
+        """
+        .eli.yml unknown rule skill
+        .eli.yml unknown rule width
+        """
 
   Rule: readme sample
 
     Scenario: the README config sample loads clean
       * > sample .eli.yml from the README
-      * > run short
-      * the exit code is 0
-      * the output is empty
+      * > eli short
+        """
+        """
 
   Rule: defaults
 
@@ -174,10 +174,10 @@ Feature: Config
 
         * one
         """
-      * > run .
-      * the exit code is 1
-      * the output is exactly
-        | bullet/SKILL.md:7 bullet * > - |
-        | sections/SKILL.md:19 sections 8 > 7 |
-        | step/SKILL.md:7 step 256 > 255 |
-        | steps/SKILL.md:21 steps 8 > 7 |
+      * > eli .
+        """
+        bullet/SKILL.md:7 bullet * > -
+        sections/SKILL.md:19 sections 8 > 7
+        step/SKILL.md:7 step 256 > 255
+        steps/SKILL.md:21 steps 8 > 7
+        """

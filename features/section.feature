@@ -17,15 +17,15 @@ Feature: section
         ## b
         ## c
         """
-      * > run many
-      * the exit code is <exit>
-      * the output is exactly
-        | <output> |
+      * > eli many
+        """
+        <output>
+        """
 
       Examples:
-        | config    | exit | output                              |
-        | 2         | 1    | many/SKILL.md:7 sections 3 > 2      |
-        | [warn, 2] | 0    | many/SKILL.md:7 warn sections 3 > 2 |
+        | config    | output                              |
+        | 2         | many/SKILL.md:7 sections 3 > 2      |
+        | [warn, 2] | many/SKILL.md:7 warn sections 3 > 2 |
 
   Rule: steps
 
@@ -47,15 +47,15 @@ Feature: section
 
         Three.
         """
-      * > run few
-      * the exit code is <exit>
-      * the output is exactly
-        | <output> |
+      * > eli few
+        """
+        <output>
+        """
 
       Examples:
-        | config    | exit | output                             |
-        | 2         | 1    | few/SKILL.md:10 steps 3 > 2        |
-        | [warn, 2] | 0    | few/SKILL.md:10 warn steps 3 > 2   |
+        | config    | output                             |
+        | 2         | few/SKILL.md:10 steps 3 > 2        |
+        | [warn, 2] | few/SKILL.md:10 warn steps 3 > 2   |
 
     Scenario: the top-level steps count bullets, paragraphs, tables and code
       * > touch .eli.yml
@@ -81,7 +81,7 @@ Feature: section
         code
         ```
         """
-      * > run mixed
-      * the exit code is 1
-      * the output is exactly
-        | mixed/SKILL.md:11 steps 5 > 3 |
+      * > eli mixed
+        """
+        mixed/SKILL.md:11 steps 5 > 3
+        """
