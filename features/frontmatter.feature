@@ -25,8 +25,6 @@ Feature: Frontmatter
         """
       * > touch wide/SKILL.md
         """
-        ---
-        ---
         """
       * > run wide
       * the exit code is 1

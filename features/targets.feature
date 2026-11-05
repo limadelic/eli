@@ -14,9 +14,6 @@ Feature: Targets
         """
       * > touch notes/x.md
         """
-        ---
-        description: Fixture.
-        ---
         """
       * > run .
       * the exit code is 1
