@@ -28,13 +28,13 @@ bullet: "-"
 | `step`     | characters in one top-level item, a link counts its label only | 255     |
 | `bullet`   | the list marker, `-`, `*` or `+`                               | `"-"`   |
 
-`sections`, `steps` and `step` take:
+Each key takes:
 
 - `N`: error at N
 - `[warn, N]`: warning at N
 - `off`: rule skipped
 
-`bullet` takes one marker. Any other value is invalid.
+For `bullet`, N is the marker: `"-"`, `"*"` or `"+"`. For example, `bullet: [warn, "*"]` warns on `*` and `bullet: off` skips the rule. Any other value is invalid.
 
 Lookup: the first value set wins per key. The order is `--config <file>`, then each `.eli.yml` from the current dir up to the root, nearest first, then `~/.claude/skills/.eli.yml`, then the defaults.
 

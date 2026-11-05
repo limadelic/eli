@@ -56,6 +56,30 @@ Feature: section
       * the output is exactly
         | many/SKILL.md:11 sections 3 > 2 |
 
+    Scenario: a warn sections value warns and exits 0
+      * > touch .eli.yml
+        """
+        sections: [warn, 2]
+        """
+      * > touch many/SKILL.md
+        """
+        ---
+        name: many
+        description: Fixture.
+        ---
+        # Many
+
+        ## a
+
+        ## b
+
+        ## c
+        """
+      * > run many
+      * the exit code is 0
+      * the output is exactly
+        | many/SKILL.md:11 warn sections 3 > 2 |
+
   Rule: steps
 
     Scenario: a section over the top-level steps fails
@@ -115,6 +139,67 @@ Feature: section
       * the exit code is 1
       * the output is exactly
         | few/SKILL.md:13 steps 3 > 2 |
+
+    Scenario: a warn steps value warns and exits 0
+      * > touch .eli.yml
+        """
+        steps: [warn, 2]
+        """
+      * > touch few/SKILL.md
+        """
+        ---
+        name: few
+        description: Fixture.
+        ---
+        # Few
+
+        ## a
+
+        One.
+
+        Two.
+
+        Three.
+        """
+      * > run few
+      * the exit code is 0
+      * the output is exactly
+        | few/SKILL.md:13 warn steps 3 > 2 |
+
+    Scenario: off steps reports nothing
+      * > touch .eli.yml
+        """
+        steps: off
+        """
+      * > touch many/SKILL.md
+        """
+        ---
+        name: many
+        description: Fixture.
+        ---
+        # Many
+
+        ## a
+
+        One.
+
+        Two.
+
+        Three.
+
+        Four.
+
+        Five.
+
+        Six.
+
+        Seven.
+
+        Eight.
+        """
+      * > run many
+      * the exit code is 0
+      * the output is empty
 
     Scenario: the top-level steps count bullets, paragraphs, tables and code
       * > touch .eli.yml

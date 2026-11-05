@@ -112,6 +112,52 @@ Feature: step
       * the output is exactly
         | long/SKILL.md:9 step 301 > 300 |
 
+    Scenario: a warn step value warns and exits 0
+      * > touch .eli.yml
+        """
+        step: [warn, 5]
+        """
+      * > touch short/SKILL.md
+        """
+        ---
+        name: short
+        description: Fixture.
+        ---
+        # Short
+
+        ## a
+
+        One two three.
+        """
+      * > run short
+      * the exit code is 0
+      * the output is exactly
+        | short/SKILL.md:9 warn step 14 > 5 |
+
+    Scenario: off step reports nothing
+      * > touch .eli.yml
+        """
+        step: off
+        """
+      * > touch long/SKILL.md
+        """
+        ---
+        name: long
+        description: Fixture.
+        ---
+        # Long
+
+        ## a
+
+        aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+        aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+        aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+        aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+        """
+      * > run long
+      * the exit code is 0
+      * the output is empty
+
     Scenario: a hard line break counts as one space
       * > touch .eli.yml
         """
@@ -241,3 +287,48 @@ Feature: step
       * the exit code is 1
       * the output is exactly
         | dash/SKILL.md:10 bullet - > * |
+
+    Scenario: a warn bullet value warns and exits 0
+      * > touch .eli.yml
+        """
+        bullet: [warn, "*"]
+        """
+      * > touch dash/SKILL.md
+        """
+        ---
+        name: dash
+        description: Fixture.
+        ---
+        # Dash
+
+        ## a
+
+        - one
+        - two
+        """
+      * > run dash
+      * the exit code is 0
+      * the output is exactly
+        | dash/SKILL.md:9 warn bullet - > * |
+        | dash/SKILL.md:10 warn bullet - > * |
+
+    Scenario: off bullet reports nothing
+      * > touch .eli.yml
+        """
+        bullet: off
+        """
+      * > touch star/SKILL.md
+        """
+        ---
+        name: star
+        description: Fixture.
+        ---
+        # Star
+
+        ## a
+
+        * one
+        """
+      * > run star
+      * the exit code is 0
+      * the output is empty
