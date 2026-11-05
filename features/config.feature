@@ -80,6 +80,8 @@ Feature: Config
         | bullet: 5           | .eli.yml bullet: invalid value 5            |
         | sections: off       | .eli.yml sections: invalid value "off"      |
         | sections: [warn, 2] | .eli.yml sections: invalid value ["warn",2] |
+        | step: {a: 1}        | .eli.yml step: invalid value {"a":1}        |
+        | step: 2024-01-01    | .eli.yml step: invalid value "2024-01-01"   |
 
   Rule: unknown key
 
