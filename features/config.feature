@@ -86,7 +86,6 @@ Feature: Config
       * > touch .eli.yml
         """
         skill:
-          sections: 2
         width: 80
         """
       * > run short
