@@ -4,11 +4,14 @@ require 'open3'
 
 module Home
   def run(args)
-    output, = Open3.capture2e({ 'HOME' => home }, "eli #{args}", chdir: @cwd || home)
-    output
+    Open3.capture2e({ 'HOME' => home }, "eli #{args}", chdir: workdir).first
   end
 
   def home
     @home
+  end
+
+  def workdir
+    @cwd || File.join(home, '.claude', 'skills')
   end
 end

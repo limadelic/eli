@@ -2,7 +2,6 @@ name: CI
 
 on:
   push:
-    branches-ignore: [badges]
   pull_request:
     types: [opened, reopened, synchronize, closed]
   delete:
@@ -60,10 +59,11 @@ jobs:
     if: ${{ !cancelled() && (needs.cukes.result != 'skipped' || github.event_name == 'delete' || github.event.action == 'closed') }}
     permissions:
       contents: write
+      actions: read
       pages: write
       id-token: write
       pull-requests: write
-    uses: limadelic/badge/.github/workflows/badge.yml@v1.1
+    uses: limadelic/badge/.github/workflows/badge.yml@v1.2
     with:
       labels: cukes=report.html
     secrets: inherit

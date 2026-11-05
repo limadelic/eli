@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 When(/^> eli(?: (.+))?$/) do |args, *rest|
-  output = run(args)
-  expect_lines(rest.first, output)
+  raise 'missing docstring' if rest.empty?
+
+  expect_lines(rest.first, run(args))
 end
 
 When(/^> touch (.+)$/) do |path, body|
@@ -15,19 +16,35 @@ When(/^> cd (.+)$/) do |path|
   @cwd = File.join(home, '.claude', 'skills', path)
 end
 
-def expect_lines(table, output)
-  return expect(output).to be_empty unless table
-
-  sight(table.raw.flatten, output)
+When(/^> sample \.eli\.yml from the README$/) do
+  file = File.join(home, '.claude', 'skills', '.eli.yml')
+  FileUtils.mkdir_p(File.dirname(file))
+  File.write(file, readme_sample)
 end
 
-def sight(cells, output)
-  cells.reduce(0) { |cursor, cell| spot(cell, output, cursor) }
+def readme_sample
+  readme = File.expand_path('../../README.md', __dir__)
+  File.read(readme)[/^```ya?ml\n(.*?)^```/m, 1] || raise('no yaml block in README')
 end
 
-def spot(cell, output, cursor)
-  idx = output.index(cell, cursor)
-  raise "Expected '#{cell}' in output after #{cursor}:\n#{output}" unless idx
+def expect_lines(doc, output)
+  wants = doc.to_s.lines(chomp: true)
+  return expect(output).to be_empty if wants.empty?
 
-  idx + cell.length
+  ordered(wants, output.lines(chomp: true))
+end
+
+def ordered(wants, lines)
+  wants.inject(lines, &method(:after))
+end
+
+def after(lines, want)
+  idx = position(lines, want)
+  raise "Expected '#{want}' in output:\n#{lines.join("\n")}" unless idx
+
+  lines.drop(idx + 1)
+end
+
+def position(lines, want)
+  lines.index { |line| line.include?(want) }
 end

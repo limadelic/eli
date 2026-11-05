@@ -31,12 +31,12 @@ jobs:
 
       - id: cukes
         if: ${{ !cancelled() }}
-        uses: limadelic/badge/cukes@v1.1
+        uses: limadelic/badge/cukes@v1.2
         with:
           json: reports/cucumber.json
 
       - if: ${{ !cancelled() }}
-        uses: limadelic/badge/make@v1.1
+        uses: limadelic/badge/make@v1.2
         with:
           label: cukes
           message: ${{ steps.cukes.outputs.message }}
